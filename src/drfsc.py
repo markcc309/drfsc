@@ -4,15 +4,13 @@ import pandas as pd
 import itertools
 import matplotlib.pyplot as plt
 import statsmodels.discrete.discrete_model as sm
-from src.utils import remove_feature_duplication, scale_data, extend_features, data_info, create_balanced_distributions
-from src.rfsc import RFSC, RFSC_base, evaluate_model, model_score, evaluate_interim_model
-
+from src.utils import *
+from src.rfsc import RFSC, RFSC_base
 
 class DRFSC:
     """
         Distributed Randomised Feature Selection for Classification (DRFSC)
     """
-    
     def __init__(
             self, 
             n_vbins: int=1, 
@@ -26,8 +24,38 @@ class DRFSC:
             verbose: bool=False, 
             polynomial: int=1, 
             preprocess: bool=True, 
-            max_processes=None
+            max_processes: int=None
         ):
+        """
+        Constructor for DRFSC class. Initialises the DRFSC class with the given parameters.
+
+        Parameters
+        ----------
+        n_vbins : int, optional
+            Number of vertical partitions to create for the data. Defaults to 1.
+        n_hbins : int, optional
+            Number of horizontal partitions to create for the data. If output = 'ensemble', each hbin will converge to its own best model. Defaults to 1.
+        n_runs : int, optional
+            Number of feature-sharing iterations to perform. Larger numbers may yield better results, but also take longer. Defaults to 1.
+        redistribute_features : bool, optional
+            If True, the base features included in each bin will be shuffled at each feature-sharing iteration. Does not affect feature sharing. Defaults to False.
+        feature_sharing : str, optional 
+            The method used to share features. Defaults to 'all'. Options (str): 'all', 'latest', 'top_k'. If feature_sharing = 'all', the entire history of best features from all sub-processes will be shared. If feature)sharing = 'latest', features from all sub-processes at the current iteration will be shared. If feature_sharing = 'top_k', the best k features will be shared. 
+        k : int, optional 
+            Number of best features to share. Only used if feature_sharing = 'top_k'. Defaults to 0.
+        output : str, optional
+            Output type desired. Options (str): 'single', 'ensemble'. If output = 'single', the best model from all sub-processes will be returned. If output = 'ensemble', the best model from each horizontal partition will be returned. If output = 'ensemb;e'. no features between different horizontal partitions will be created. Defaults to 'single'.
+        metric : str, optional
+            Evaluation metric used in the optimisation process. Options (str) : ['acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc']. Defaults to 'roc_auc'. For more information on the metrics, see the documentation for the sklearn.metrics module.
+        verbose : bool, optional
+            if True, prints extra information. Defaults to False.
+        polynomial : int, optional
+            degree of polynomial features to use. Defaults to 1.
+        preprocess : bool, optional
+            If True, will scale-data, create dummies for categorical variables, and create polynomial features based on passed `polynomial` parameter. If False, will only convert data to numpy arrays. Defaults to True.
+        max_processes : int, optional
+            Enforces maximum number of processes that can be generated. If None, will use all available cores. Defaults to None.
+        """
         
         validate_model(
             metric=metric, 
@@ -68,26 +96,80 @@ class DRFSC:
         return f"{self.__class__.__name__}(n_vbins={self.n_vbins}, n_hbins={self.n_hbins}, n_runs={self.n_runs}, redistribute_features={self.redistribute_features}, feature_sharing={self.feature_sharing}, k={self.k}, output={self.output}, metric={self.metric}, verbose={self.verbose}, polynomial={self.polynomial}, preprocess={self.preprocess}, max_processes={self.max_processes})"
         
     def get_rfsc_params(self):
+        """
+        Getter for RFSC parameters. Returns a dictionary of the current RFSC parameters
+        """
         return self.RFSC_model.__dict__
         
     def set_rfsc_params(self, params: dict):
+        """
+        Setter for RFSC parameters. Updates the RFSC parameters with the given dictionary. Dictionary must be in the form of {parameter_name: parameter_value}.
+        
+        Parameters
+        ----------
+        n_models : int 
+            Number of models generated per iteration. Default=300.
+        n_iters : int 
+            Number of iterations. Default=150.
+        tuning : float 
+            Learning rate that dictates the speed of regressor inclusion probability (rip) convergence. Smaller values -> slower convergence. Default=50.
+        tol : float 
+            Tolerance condition. Default=0.002.
+        alpha : float 
+            Significance level for model pruning. Default=0.99.
+        rip_cutoff : float 
+            Determines rip threshold for feature inclusion in final model. Default=1.
+        metric : str
+            Optimization metric. Default='roc_auc'. Options: 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'.
+        verbose : bool 
+            Provides extra information. Defaults=False.
+        upweight : float 
+            Upweights initial feature rips. Default=1.
+        """
         for key, value in params.items():
             self.RFSC_model.__setattr__(key, value)
-        print("Updated RFSC model parameters: {}".format(self.RFSC_model.__dict__))
+        print(f"Updated RFSC model parameters: {self.RFSC_model.__dict__}")
         
     def generate_processes(self, r: int, v_bins: int, h_bins: list) -> dict:
         return {(r,i,j): RFSC() for i in range(v_bins) for j in h_bins}
     
     def load_data(self, 
-            X_train, 
-            X_val, 
-            Y_train, 
-            Y_val, 
-            X_test=None, 
-            Y_test=None, 
-            polynomial=1, 
-            preprocess=True
+            X_train: np.ndarray or pd.DataFrame, 
+            X_val: np.ndarray or pd.DataFrame, 
+            Y_train: np.ndarray or pd.DataFrame, 
+            Y_val: np.ndarray or pd.DataFrame, 
+            X_test: np.ndarray or pd.DataFrame=None, 
+            Y_test: np.ndarray or pd.DataFrame=None, 
+            polynomial:int=1, 
+            preprocess:bool=True
         ):
+        """
+        Preprocesses the data in the required way for the DRFSC model. Can be used to load data into the model if it has not been loaded yet. Scales the data to [0,1] and creates polynomial expansion based on the passed 'polynomial' parameter. 
+
+        Parameters
+        ----------
+        X_train : np.ndarray or pd.DataFrame 
+            Train set data
+        X_val : np.ndarray or pd.DataFrame
+            Validation set data
+        Y_train : np.ndarray or pd.DataFrame
+            Train set labels
+        Y_val : np.ndarray or pd.DataFrame
+            Validation set labels
+        X_test : np.ndarray or pd.DataFrame, optional
+            Test set data. Only required if postprocessing is required. Defaults to None.
+        Y_test : np.ndarray or pd.DataFrame optional
+            Test set labels. Only required if postprocessing is required. Defaults to None.
+        polynomial : int, optional
+            degree of polynomial features to use. Defaults to 1.
+        preprocess : bool, optional
+            If True, will scale-data, create dummies for categorical variables, and create polynomial features based on passed `polynomial` parameter. If False, will only convert data to numpy arrays. Defaults to True.
+
+        Returns 
+        -------
+        X_train, X_val, Y_train, Y_val, X_test, Y_test : np.ndarray
+            Preprocessed data and labels
+        """
         
         if preprocess is True:
             if not isinstance(polynomial, int):
@@ -100,14 +182,7 @@ class DRFSC:
             
             if X_test is not None and X_test.shape[1] != X_train.shape[1]:
                 X_test = extend_features(scale_data(X_test), degree=polynomial) 
-        
-        data_info(
-            X_train=X_train, 
-            X_val=X_val, 
-            Y_train=Y_train, 
-            Y_val=Y_val
-        )
-        
+    
         self.input_feature_names = None
         self.input_label_names = None
         
@@ -126,23 +201,21 @@ class DRFSC:
             if isinstance(Y_train, pd.DataFrame):
                 if Y_train.shape[1] != Y_train.select_dtypes(include=np.number).shape[1]:
                     Y_train = pd.get_dummies(Y_train.select_dtypes(exlude=["float", 'int']))
-                
+
                 self.input_label_names = Y_train.columns.to_numpy()
                 
             elif isinstance(Y_train, pd.Series): # set input_label_names for pd.Series
                 self.input_label_names = Y_train.name 
                 
             X_train, X_val, Y_train, Y_val = map(lambda x: x.to_numpy(), [X_train, X_val, Y_train, Y_val])
-        
-        Y_train = Y_train.flatten() if Y_train.ndim != 1 else Y_train
-        Y_val = Y_val.flatten() if Y_val.ndim != 1 else Y_val
-        
+
         if isinstance(X_test, pd.DataFrame):
             X_test = X_test.to_numpy()
             
-        if isinstance(Y_test, pd.DataFrame):
+        if isinstance(Y_test, (pd.DataFrame, pd.Series)):
             Y_test = Y_test.to_numpy()
-            Y_test = Y_test.flatten() if Y_test.ndim != 1 else Y_test
+            
+        Y_test = Y_test.flatten() if Y_test.ndim != 1 else Y_test
         
         validate_data(
             X_train=X_train, 
@@ -156,10 +229,37 @@ class DRFSC:
         self.loaded_data = 1
         self.labels = np.concatenate((Y_train, Y_val), axis=0)
         self.data = np.concatenate((X_train, X_val), axis=0)
+        
+        data_info(
+            X_train=X_train, 
+            X_val=X_val, 
+            Y_train=Y_train, 
+            Y_val=Y_val
+        )
         return X_train, X_val, Y_train, Y_val, X_test, Y_test
     
-    def fit(self, X_train, X_val, Y_train, Y_val):
+    def fit(
+            self, 
+            X_train: np.ndarray or pd.DataFrame, 
+            X_val: np.ndarray or pd.DataFrame,  
+            Y_train: np.ndarray or pd.DataFrame, 
+            Y_val: np.ndarray or pd.DataFrame
+        ):
+        """
+        The main function for fitting the model. Returns the a single final model if output == 'single', else returns a model ensemble based on the number of horizontal partitions (n_hbins).
 
+        Parameters
+        ----------
+        X_train : np.ndarray or pd.DataFrame 
+            Train set data
+        X_val : np.ndarray or pd.DataFrame
+            Validation set data
+        Y_train : np.ndarray or pd.DataFrame
+            Train set labels
+        Y_val : np.ndarray or pd.DataFrame
+            Validation set labels
+
+        """
         if self.loaded_data != 1:
             X_train, X_val, Y_train, Y_val, _, _= self.load_data(
                                                         X_train=X_train, 
@@ -170,6 +270,9 @@ class DRFSC:
                                                         preprocess=self.preprocess
                                                     )
 
+        if any(isinstance(x, pd.DataFrame) for x in [X_train, X_val, Y_train, Y_val]):
+            raise TypeError("Data must be numpy arrays")
+        
         n_samples, n_features = X_train.shape
         
         # create vertical and horizontal paritions
@@ -239,71 +342,75 @@ class DRFSC:
             pool.join()
         
             if len(result_obj) != (self.n_vbins * len(non_converged_hbins)):
-                print("result_obj length is {}. Should be {}".format(len(result_obj), (self.n_vbins * len(non_converged_hbins))))
+                print(f"result_obj length is {len(result_obj)}. Should be {(self.n_vbins * len(non_converged_hbins))}")
             
             for result in result_obj:
+                # predict on all sub-processes
                 result.model, result.evaluation = evaluate_interim_model(
-                                                    model_features = result.features_, 
-                                                    X_train = X_train, 
-                                                    X_val = X_val,
-                                                    Y_train = Y_train, 
-                                                    Y_val = Y_val,
-                                                    metric = self.metric
-                                                ) # predict on all sub-processes
+                                                    model_features=result.features_, 
+                                                    X_train=X_train, 
+                                                    X_val=X_val,
+                                                    Y_train=Y_train, 
+                                                    Y_val=Y_val,
+                                                    metric=self.metric
+                                                ) 
                 iter_results[result.drfsc_index] = result
                 
-
+            # update full results dict
             self.results_full, single_iter_results = self.update_full_results(
-                                                        results_full = self.results_full, 
-                                                        iter_results = iter_results
-                                                    ) # update full results dict
-            
+                                                        results_full=self.results_full, 
+                                                        iter_results=iter_results
+                                                    ) 
+            # map local feature indices to global feature indices
             single_iter_results = self.map_local_feats_to_gt(
-                                    iter_results = single_iter_results, 
-                                    r = r, 
-                                    hbins = non_converged_hbins
-                                ) # map local feature indices to global feature indices
+                                    iter_results=single_iter_results, 
+                                    r=r, 
+                                    hbins=non_converged_hbins
+                                ) 
             
             comb_sig_feats_gt = [model[0] for model in single_iter_results.values()]
-                    
+            
+            # update the current best results
             self.J_best, self.J_star = update_best_models(
-                                            J_best = self.J_best, 
-                                            J_star = self.J_star, 
-                                            single_iter_results = single_iter_results, 
-                                            non_converged_hbins = non_converged_hbins, 
-                                            metric = self.metric
-                                        ) # update the current best results
-
+                                            J_best=self.J_best, 
+                                            J_star=self.J_star, 
+                                            single_iter_results=single_iter_results, 
+                                            non_converged_hbins=non_converged_hbins, 
+                                            metric=self.metric
+                                        ) 
+            
+            # update converged horizontal partitions
             non_converged_hbins = self.convergence_check(
-                                        r = r,
-                                        J_star = self.J_star, 
-                                        non_converged_hbins = non_converged_hbins
-                                    ) # update converged horizontal partitions
+                                        r=r,
+                                        J_star=self.J_star, 
+                                        non_converged_hbins=non_converged_hbins
+                                    ) 
             
+            # update feature list shared with other partitions
             M = self.feature_share(
-                    r = r, 
-                    results_full = self.results_full, 
-                    comb_sig_feats_gt = comb_sig_feats_gt, 
-                    non_converged_hbins = non_converged_hbins, 
-                    M = M
-                ) # update feature list shared with other partitions
+                    r=r, 
+                    results_full=self.results_full, 
+                    comb_sig_feats_gt=comb_sig_feats_gt, 
+                    non_converged_hbins=non_converged_hbins, 
+                    M=M
+                ) 
             
-            print("M: {}".format(M)) if self.verbose else None
+            print(f"M: {M}") if self.verbose else None
             self.M_history.update([(r, M)])
             
             if len(non_converged_hbins) == 0:
-                print("All horizontal partitions have converged. Final iter count: {}".format(r+1))
+                print(f"All horizontal partitions have converged. Final iter count: {r+1}")
                 break
             
         if self.output == 'single':
-            self.features_num = select_single_model(J_best = self.J_best)[0]
+            self.features_num = select_single_model(J_best=self.J_best)[0]
             self.model, self.model_score = evaluate_interim_model(
-                                                model_features = self.features_num, 
-                                                X_train = X_train, 
-                                                X_val = X_val, 
-                                                Y_train = Y_train, 
-                                                Y_val = Y_val, 
-                                                metric = self.metric
+                                                model_features=self.features_num, 
+                                                X_train=X_train, 
+                                                X_val=X_val, 
+                                                Y_train=Y_train, 
+                                                Y_val=Y_val, 
+                                                metric=self.metric
                                             )
         for value in self.results_full.values(): 
             # remove the features_passed from results_full
@@ -311,99 +418,105 @@ class DRFSC:
             
         return self
     
-    def score(self, X_train, X_val, X_test, Y_train, Y_val, Y_test):
-        for x in [X_train, X_val, X_test, Y_train, Y_val, Y_test]:
-            if isinstance(x, pd.DataFrame):
-                x = x.to_numpy()
+    def score(
+        self,
+        X_test: np.ndarray or pd.DataFrame, 
+        Y_test: np.ndarray or pd.DataFrame or pd.Series,
+        metric: str=None
+    ):
+        """
+        Used to evaluate the final model on the test set.
+
+        Parameters
+        ----------
+        X_test : np.ndarray or pd.DataFrame
+            Test set data
+        Y_test : np.ndarray or pd.DataFrame or pd.Series
+            Test set labels
+        metric : str, optional
+            Metric to use for evaluation. By default uses the metric specified in the constructor. Other options: ('acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc').
+
+        Returns
+        ----------
+        evaluation : dict
+            returns the score of the model based on the metric specified.
+        """
+        
+        if isinstance(X_test, pd.DataFrame):
+            X_test = X_test.to_numpy()
             
-        return evaluate_model(
-                        model_features=self.features_num,
-                        X_train=X_train,
-                        X_val=X_val,
-                        X_test=X_test,
-                        Y_train=Y_train,
-                        Y_val=Y_val,
-                        Y_test=Y_test,
-                        metric=self.metric
-                    )
-    
+        if isinstance(Y_test, (pd.DataFrame, pd.Series)):
+            Y_test = Y_test.to_numpy()
+        Y_test = Y_test.flatten() if Y_test.ndim != 1 else Y_test
 
-    def predict(self, X_test, Y_test = None):
-        """_summary_
+        eval_metric = metric if metric is not None else self.metric
+        score = model_score(
+                    method=eval_metric, 
+                    y_true=Y_test, 
+                    y_pred_label=self.predict(X_test), 
+                    y_pred_prob=self.predict_proba(X_test)
+                )   
+            
+        return {'metric': eval_metric, 'score': score}
+                
+    def predict(self, X_test):
+        """
+        Uses the best model to predict on the test set
 
-        Args:
-            X_test (_type_): _description_
-            Y_test (_type_, optional): _description_. Defaults to None.
+        Parameters
+        ----------
+        X_test : np.ndarray 
+            Test set data
 
-        Raises:
-            ValueError: _description_
-
-        Returns:
-            _type_: _description_
+        Returns
+        ----------
+        np.ndarray containing the predicted labels
+        
         """
         if self.output == 'ensemble':
-            if Y_test is None:
-                raise ValueError("Y_test must be provided for ensemble output")
-            
-            model_ensemble, self.ensemble_predictions, self.ensemble_labels, self.combined_evaluation = self.generate_ensemble(
-                                        X_test = X_test, 
-                                        Y_test = Y_test, 
-                                        J_best = self.J_best, 
-                                        metric = self.metric, 
-                                        h_bins = self.n_hbins
+            model_ens, self.ensemble_pred = self.generate_ensemble(
+                                        X_test=X_test, 
+                                        J_best=self.J_best, 
                                     )
             self.model_ensemble = self.map_feature_indices_to_names(
-                                        output = self.output, 
-                                        final_model = model_ensemble
+                                        output=self.output, 
+                                        final_model=model_ens
                                     )
+            self.final_model(self.model_ensemble)
             
-            return self.ensemble_predictions, self.ensemble_labels, self.combined_evaluation
+            return self.ensemble_pred['majority'].to_numpy()
             
         else: # output == 'single'
-            self.coef_ = self.model.params
-            self.label_pred = self.model.predict(X_test[:, self.features_num])
-            
-            if self.input_feature_names:
-                self.features_ = self.map_feature_indices_to_names(
-                                        output=self.output, 
-                                        final_model=self.features_num
-                                    )
-            else:
-                self.features_ = self.features_num
-            
-            return self.label_pred.round()
+            self.label_pred = self.predict_proba(X_test).round()
+            return self.label_pred
     
     
-    def predict_proba(self, X_test, Y_test=None):
-        """_summary_
+    def predict_proba(self, X_test: np.ndarray):
+        """
+        Uses the best model to predict on the test set, returns labels 
 
-        Args:
-            X_test (_type_): _description_
-            Y_test (_type_, optional): _description_. Defaults to None.
-
-        Raises:
-            ValueError: _description_
-
-        Returns:
-            _type_: _description_
+        Parameters
+        ----------
+        X_test : np.ndarray 
+            Test set data
+            
+        Returns
+        -------
+        np.ndarray containing the predicted probabilities
         """
         if self.output == 'ensemble':
-            if Y_test is None:
-                raise ValueError("Y_test must be provided for ensemble output")
 
-            model_ensemble, self.ensemble_predictions, self.ensemble_labels, self.combined_evaluation = self.generate_ensemble(
-                                        X_test=X_test, 
-                                        Y_test=Y_test, 
-                                        J_best=self.J_best, 
-                                        metric=self.metric, 
-                                        h_bins=self.n_hbins
-                                    )
+            model_ens, self.ensemble_pred = self.generate_ensemble(
+                            X_test=X_test, 
+                            J_best=self.J_best, 
+                        )
             self.model_ensemble = self.map_feature_indices_to_names(
                                         output=self.output, 
-                                        final_model=model_ensemble
+                                        final_model=model_ens
                                     )
+            self.final_model(self.model_ensemble)
             
-            return self.ensemble_predictions, self.ensemble_labels, self.combined_evaluation
+            return self.ensemble_pred['mean_prob'].to_numpy()
 
         
         else: #self.output == 'single'
@@ -421,63 +534,46 @@ class DRFSC:
         
     def generate_ensemble(
             self, 
-            X_test, 
-            Y_test, 
+            X_test: np.ndarray, 
             J_best: dict, 
-            metric: str, 
-            h_bins: int
         ):
-        """_summary_
+        """
+        Generates the model ensemble based on the best model for each horizontal partition.
 
-        Args:
-            X_test (_type_): _description_
-            Y_test (_type_): _description_
-            J_best (dict): _description_
-            metric (str): _description_
-            h_bins (int): _description_
+        Parameters
+        ----------
+        X_test : np.ndarray 
+            Test set data
+        J_best : dict
+            dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)
 
-        Raises:
-            ValueError: _description_
-
-        Returns:
-            _type_: _description_
+        Returns
+        ----------
+        ensemble : dict
+            dictionary that contains as keys the names of the models making up the ensemble. For each key, the value is a list containing a list of the feature indices used for that model, and the model object itself.
+        ensemble_proba : pd.DataFrame
+            dataframe containing the predicted probabilities for each model in the ensemble
         """
         
-        if not all(isinstance(x, np.nd.array) for x in [self.data, X_test, self.labels, Y_test]):
-            raise ValueError("All inputs must be numpy arrays")
+        if not all(isinstance(x, np.ndarray) for x in [self.data, X_test, self.labels]):
+            raise TypeError("All inputs must be numpy arrays")
 
         # get the best model for each horizontal partition   
         ensemble = {}
-        ensemble_probabilities = pd.DataFrame()
-        ensemble_labels = pd.DataFrame()
-        for h_bin in range(h_bins):
+        ensemble_proba = pd.DataFrame()
+        for h_bin in range(self.n_hbins):
             model = sm.Logit(
                     self.labels, 
                     self.data[:, J_best[h_bin][0]]
-                ).fit(disp = False, method = 'lbfgs')
-            ensemble.update({f"hbin_{str(h_bin)}_model" : [J_best[h_bin][0], model]})
-            prob_prediction = model.predict(X_test[:, J_best[h_bin][0]])
-            label_prediction = [round(x) for x in prob_prediction]
+                ).fit(disp=False, method='lbfgs')
+            ensemble.update({f"model_h{str(h_bin)}" : [J_best[h_bin][0], model]})
+            ensemble_proba[f"model_h{str(h_bin)}"] = model.predict(X_test[:, J_best[h_bin][0]])
             
-            ensemble_probabilities[f"hbin_{str(h_bin)}_model"] = prob_prediction
-            ensemble_labels[f"hbin_{str(h_bin)}_model"] = label_prediction
-            
-        ensemble_probabilities['mean_prob'] = ensemble_probabilities.mean(axis=1)
-        ensemble_probabilities['majority'] = [round(x) for x in ensemble_probabilities['mean_prob']]
-        
-        ensemble_labels['mean_label'] = ensemble_labels.mean(axis=1)
-        ensemble_labels['majority'] = [round(x) for x in ensemble_labels['mean_label']]
-        
-        combined_evaluation = model_score(
-                                method=metric, 
-                                y_true=Y_test, 
-                                y_pred_label=ensemble_labels['majority'].values.tolist(), 
-                                y_pred_prob=ensemble_probabilities['mean_prob'].values.tolist()
-                            )
-        
-        evals = {'metric': metric, 'evaluation': combined_evaluation}
-        return ensemble, ensemble_probabilities, ensemble_labels, evals
-
+        ensemble_proba['mean_prob'] = ensemble_proba.mean(axis=1)
+        ensemble_proba['majority'] = [round(x) for x in ensemble_proba['mean_prob']]
+    
+        self.ensemble_pred = ensemble_proba
+        return ensemble, ensemble_proba
 
     def update_full_results(
             self, 
@@ -505,7 +601,8 @@ class DRFSC:
         
         Returns
         -------
-            iter_results (dict) with global feature indices.
+            iter_results : dict 
+                dict updated with global feature indices.
         """
         for i,j in itertools.product(range(self.n_vbins), hbins):
             iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
@@ -526,14 +623,19 @@ class DRFSC:
         
         Parameters
         ----------
-            r (int): current iteration
-            results_full (dict): dictionary containing the results from all iterations.
-            comb_sig_feats_gt (list): list of global feature indices from models in the current iteration.
-            non_converged_hbins (list): list of horizontal partition indicies that have not converged.
+        r : int
+            current iteration
+        results_full : dict
+            dictionary containing the results from all iterations
+        comb_sig_feats_gt : list
+            list of global feature indices from models in the current iteration
+        non_converged_hbins : list 
+            list of horizontal partition indicies that have not converged
             
         Returns
         -------
-            M (dict): dictionary containing the features to be shared with each bin in the subsequent iteration
+        M : dict 
+            dictionary containing the features to be shared with each bin in the subsequent iteration
         """
         if self.feature_sharing == 'latest':
             M = {i: 0 for i in range(self.n_hbins)} # reset M dict if feature sharing is set to latest
@@ -544,7 +646,7 @@ class DRFSC:
             
             else: #self.output == 'single':
                 if self.feature_sharing == 'top_k':
-                    top_k_model_feats = [sorted(results_full.values(), key = lambda x: x[1], reverse = True)[i][0] for i in range(min(self.k, len(results_full.values())))]
+                    top_k_model_feats = [sorted(results_full.values(), key=lambda x: x[1], reverse=True)[i][0] for i in range(min(self.k, len(results_full.values())))]
                     M[j] = remove_feature_duplication(top_k_model_feats)
                 
                 else:
@@ -552,46 +654,72 @@ class DRFSC:
 
         return M
     
-    def final_model(self, n_features: int, model_ensemble: dict):
+    def final_model(self, model_ensemble: dict):
+        """
+        Helper function for generating the final model based on the ensemble of models.
+
+        Parameters
+        ----------
+        model_ensemble : dict
+            contains the ensemble of models. Each key is a separate model, and the value is a list containing a list of the feature indices used for that model, the mapped feature names, and the model object itself.
+            
+        """
+
         if self.output != 'ensemble':
             raise ValueError("Final model only valid for ensemble output")
         
-        df = pd.DataFrame(columns = model_ensemble.keys(), index = range(n_features)) 
+        if self.input_feature_names is not None:
+            idx = self.input_feature_names
+        else:
+            idx = range(self.data.shape[1])
+    
+        df = pd.DataFrame(columns=model_ensemble.keys(), index=idx) 
+        df2 = pd.DataFrame(columns=model_ensemble.keys(), index=idx) 
         for key, value in model_ensemble.items():
             coefs = value[2].params
-            feat_index= value[0]
+            feat_index = value[0]
+            feat_names = value[1]
             for val in zip(feat_index, coefs):
                 df.loc[val[0], key] = val[1]
-        df.fillna(0, inplace = True)
+            for val in zip(feat_names, coefs):
+                df2.loc[val[0], key] = val[1]
+        df.fillna(0, inplace=True)
+        df2.fillna(0, inplace=True)
         df['mean'] = df.mean(axis=1)
+        df2['mean'] = df2.mean(axis=1)
+        
         self.model_coef = list(df[df['mean'] != 0]['mean'])
-        self.model_features = list(df[df['mean']!= 0].index)
+        self.model_features_num = list(df[df['mean']!= 0].index)
+        self.model_features_name = list(df2[df2['mean']!= 0].index)
         
     def map_feature_indices_to_names(
             self, 
             output: str, 
-            final_model: dict
+            final_model: dict or list
         ):
         """
         Maps the feature indices to the original feature names, if they exist.
         
         Parameters
         ----------
-        output (str): output type
-        final_model (dict): _description_
-
+        output :str
+            output type. Either 'single' or 'ensemble'.
+        final_model : dict or list
+            contains the converged models from the final iteration for each horizontal parition. If output is 'single', it is a single list, containing a list of feature indices and model object. If output is 'ensemble', it is a dictionary, with the keys being the horizontal partition index, and the values being a list containing the feature indices, and model object
 
         Returns
         -------
-
+        final_model : dict or list
+            returns final_model with the feature indices mapped to the original feature names.
         """
         if output == 'ensemble':
             for key in final_model.keys():
                 final_model[key] = [final_model[key][0], [np.array(self.input_feature_names)[x] for x in final_model[key][0]], final_model[key][1]]
-            return final_model
                 
         else: #output == 'single':
-            return [np.array(self.input_feature_names)[x] for x in final_model]
+            final_model = [np.array(self.input_feature_names)[x] for x in final_model]
+            
+        return final_model
                 
     def convergence_check(
             self, 
@@ -599,18 +727,22 @@ class DRFSC:
             J_star: dict, 
             non_converged_hbins: list
         ):
-        
         """
         Checks if the tolerance condition has been met for the current iteration.
         
         Parameters
         ----------
-            r (int): current interation.
-            J_star (dict): dictionary of best models from each horizontal partition.
-            non_converged_hbins (list): list of horizontal partitions that have not converged
+        r : int
+            current interation number
+        J_star : dict
+            dictionary of best models from each horizontal partition.
+        non_converged_hbins : list
+            list of horizontal partitions that have not converged
             
-        Returns: 
-            (list) indicies of horizontal partition that have not converged
+        Returns
+        -------
+        hbins_not_converged : list  
+            indicies of horizontal partition that have not converged
         """
         hbins_converged = []
         for hbin in non_converged_hbins:
@@ -621,53 +753,98 @@ class DRFSC:
             elif r >= 2 and J_star[hbin][r] == J_star[hbin][r-1] and J_star[hbin][r] == J_star[hbin][r-2]:
                 print(f"Iter {r}. No appreciable improvement over the last 3 iterations in hbin {hbin}") if self.verbose else None
                 hbins_converged.append(hbin)
-                
-        return [bin for bin in non_converged_hbins if bin not in hbins_converged]
+        
+        hbins_not_converged = [bin for bin in non_converged_hbins if bin not in hbins_converged]
+        return hbins_not_converged 
         
     def feature_importance(self):
         """
         Creates a bar plot of the features of the model and their contribution to the final prediction.
+        
+        Returns
+        -------
+        figure : matplotlib figure
+            hisogram of feature coefficients for features of the final model.
         """
         plt.figure()
         plt.title("Feature Importance")
         plt.xlabel("Feature Name")
         plt.ylabel("Feature Coefficient")
-        
+
         if self.output == 'ensemble':
-            cols = list(self.input_feature_names)
-            cols.insert(0, 'model_id')
-            coef = pd.DataFrame(0, columns = cols, index = range(0, self.n_hbins+1))
-            for id, key in enumerate(self.model_ensemble.keys()):
-                coef.loc[id, 'model_id'] = key
-                coef.loc[id, self.model_ensemble[key][1]] = self.model_ensemble[key][2].params
-            coef.loc['mean'] = coef.mean()
-            coef.loc['mean', 'model_id'] = 'mean'
-            coef_list = coef.loc['mean'].to_list()
-            coef_list.pop(0)
-            
-            disp_dict = dict(zip(self.input_feature_names, abs(np.array(coef_list))))        
+            try:
+                cols = list(self.input_feature_names)
+                cols.insert(0, 'model_id')
+                coef = pd.DataFrame(0, columns=cols, index=range(0, self.n_hbins+1))
+                for id, key in enumerate(self.model_ensemble.keys()):
+                    coef.loc[id, 'model_id'] = key
+                    coef.loc[id, self.model_ensemble[key][1]] = self.model_ensemble[key][2].params
+                coef.loc['mean'] = coef.mean()
+                coef.loc['mean', 'model_id'] = 'mean'
+                coef_arr = coef.loc['mean'].to_numpy()
+                coef_arr = np.array(coef_arr[1:])
         
-        else: #self.output == 'single':
-            disp_dict = dict(sorted(zip(self.features_, abs(self.coef_)), key = lambda x: x[1], reverse = True))
+                coef_idx = coef_arr.nonzero()[0]
             
-        plt.bar(*zip(*disp_dict.items()))
-        return plt.show()
+                disp = dict(zip(self.input_feature_names[coef_idx], coef_arr[coef_idx]))
+            except AttributeError:
+                raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
+            
+        else: #self.output == 'single':
+            if self.input_feature_names is not None:
+                try:
+                    disp = dict(sorted(zip(self.features_, self.coef_), key = lambda x: x[1], reverse = True))
+                except AttributeError:
+                    raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
+            else:
+                print("No feature names provided. Plotting feature indices instead")
+                try:
+                    disp = dict(sorted(zip(self.features_num, self.coef_), key = lambda x: x[1], reverse = True))
+                except AttributeError:
+                    raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
+                
+        return plt.bar(*zip(*disp.items()))
             
     def pos_neg_prediction(
             self, 
-            data_index
+            data_index: int=0,
+            X_test: np.ndarray or pd.DataFrame=None
         ):
         """
-        Creates a plot of the positive and negative parts of the prediction
-        """
-        plt.figure()
-        plt.title("+/- Predictions Plot (change this label)")
-        plt.xlabel("+/-")
+        Creates a plot of the positive and negative parts of the prediction.
         
-        sample_data, _ = self.data[data_index, self.features_num], self.labels[data_index]
+        Parameters
+        ----------
+        data_index : int
+            Index of the data observation to be plotted. If X_test is not provided, then the index is relative to the provided training/validation data. If X_test is provided, then the index is relative to the provided test data. Default is 0.
+        X_test : np.array or pd.DataFrame
+            Test data to be used for prediction. If provided, then the index is relative to the provided test data. Default is None.
+        
+        Returns
+        -------
+        figure : matplotlib figure
+            figure shows, for a given sample (indexed by data_index), the positive and negative parts of the prediction. That is, it takes the value of the coefficients and multiplies them by the feature values. The positive and negative parts of the prediction are then plotted.
+        """
+        if self.output == 'ensemble':
+            features_num = self.model_features_num
+            coef = self.model_coef
+        else:
+            features_num = self.features_num
+            coef = self.coef_
+    
+        if X_test is not None:
+            if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
+                raise TypeError("X_test must be a numpy array or pandas dataframe")
+            if isinstance(X_test, pd.DataFrame):
+                X_test = X_test.to_numpy()
+                
+            sample_data =  X_test[data_index, features_num]
+
+        else:
+            sample_data = self.data[data_index, features_num]
 
         y_neg, y_pos = [], []
-        for idx, parameter_value in enumerate(self.coef_):
+        for idx, parameter_value in enumerate(coef):
             if parameter_value < 0:
                 y_neg.append(parameter_value * sample_data[idx])
             else:
@@ -675,22 +852,59 @@ class DRFSC:
                 
         y_neg_norm = 1/(1+np.exp(-sum((abs(x) for x in y_neg))))
         y_pos_norm = 1/(1+np.exp(sum((abs(x) for x in y_pos))))
-        disp_dict = dict(zip(('y+', 'y-'), (y_pos_norm, y_neg_norm)))
-        return plt.bar(*zip(*disp_dict.items()))
+        disp = dict(zip(('y+', 'y-'), (y_pos_norm, y_neg_norm)))
         
-    def single_prediction(self, data_index):
+        plt.figure()
+        plt.title("+/- Positive and Negative Parts of Prediction")
+        
+        return plt.bar(*zip(*disp.items()))
+        
+    def single_prediction(            
+            self, 
+            data_index: int=0,
+            X_test: np.ndarray or pd.DataFrame=None
+        ):
         """
         Creates a plot of the single prediction of the final model
-        """
-        plt.figure()
-        plt.title("Single Prediction Plot")
-        plt.xlabel("Prediction")
-        plt.ylabel("Feature Name")
         
-        sample_data, _ = self.data[data_index, self.features_num], self.labels[data_index]
-        fitted_vals = np.multiply(sample_data, self.coef_)
-        disp_dict = dict(zip(self.features_, fitted_vals))
-        return plt.bar(*zip(*disp_dict.items()))
+        Parameters
+        ----------
+        data_index : int
+            Index of the data observation to be plotted. If X_test is not provided, then the index is relative to the provided training/validation data. If X_test is provided, then the index is relative to the provided test data. Default is 0.
+        X_test : np.array or pd.DataFrame
+            Test data to be used for prediction. If provided, then the index is relative to the provided test data. Default is None.
+            
+        Returns
+        -------
+        figure : matplotlib figure
+            Shows for a given sample (indexed by data_index) the coefficients of the final model, weighted by the feature values for the indexed observation. 
+        """
+        if self.output == 'ensemble':
+            feat_num = self.model_features_num
+            coef = self.model_coef
+            feat_text = self.model_features_name
+        else:
+            feat_num = self.features_num
+            coef = self.coef_
+            feat_text = self.features_
+            
+        if X_test is not None:
+            if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
+                raise TypeError("X_test must be a numpy array or pandas dataframe")
+            if isinstance(X_test, pd.DataFrame):
+                X_test = X_test.to_numpy()
+        
+            sample_data = X_test[data_index, feat_num]
+        else:
+            sample_data = self.data[data_index, feat_num]
+        
+        disp = dict(zip(feat_text, np.multiply(sample_data, coef)))
+        
+        plt.figure()
+        plt.title(f"Single Prediction Plot for Sample {data_index}")
+        plt.ylabel("Sample-weighted prediction")
+        plt.xlabel("Feature Name")
+        return plt.bar(*zip(*disp. items()))
     
 def update_best_models(
         J_best: dict, 
@@ -702,11 +916,16 @@ def update_best_models(
     """
     Compares results from the current iteration against current best models. If a model from the current iteration is better, it is saved.
     
-    Returns dictionary containing the best models for each horizontal partition.
+    Returns
+    -------
+    J_best : dict
+        dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)
+    J_star : dict
+        dictionary containing only the performance evaluation of the best model for each horizontal partition (list)
     """
     for key, model in single_iter_results.items():
         if key[2] in non_converged_hbins and model[1] > J_best[key[2]][1]:
-            print("New best model for hbin {} has {} {} -- Model features {}".format(key[2], metric, model[1], model[0]))
+            print(f"New best model for hbin {key[2]}. {metric}={round(model[1], 5)} -- Model features {model[0]}")
             J_best[key[2]] = [model[i] for i in range(3)]
     for j in non_converged_hbins:
         J_star[j].append(J_best[j][1])
@@ -715,60 +934,49 @@ def update_best_models(
 
 def select_single_model(J_best: dict):
     """
-    Returns moel with highest performance evaluation
-    """
-    return sorted(J_best.values(), key = lambda x: x[1], reverse = True)[0]
+    Returns model with highest performance evaluation
     
-def validate_data(
-        X_train, 
-        X_val, 
-        Y_train, 
-        Y_val, 
-        X_test=None, 
-        Y_test=None
-    ):
+    Parameters
+    ----------
+    J_best : dict
+        dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)
+    
+    Returns
+    -------
+    best_model : list
+        List containing the best model for the entire dataset.
+    """
+    best_model = sorted(J_best.values(), key=lambda x: x[1], reverse=True)[0]
+    return best_model
+    
+def validate_data(X_train, X_val, Y_train, Y_val, X_test=None, Y_test=None):
     """ 
     Checks data is of correct shape
     """
     if X_train.shape[0] != Y_train.shape[0]:
         raise ValueError(f"X_train rows {X_train.shape[0]} must match Y_train {Y_train.shape[0]}")
-    
     if X_val.shape[0] != Y_val.shape[0]:
         raise ValueError("X_val and Y_val must have the same number of rows")
-    
     if X_train.shape[1] != X_val.shape[1]:
         raise ValueError("X_train and X_val must have the same number of columns")
-    
     if X_test is not None and Y_test is not None:
         if X_test.shape[0] != Y_test.shape[0]:
             raise ValueError("X_test and Y_test must have the same number of rows")
-        
         if X_test.shape[1] != X_train.shape[1]:
             raise ValueError("X_test and X_train must have the same number of columns")
             
-def _check_type(
-        X_train, 
-        X_val, 
-        Y_train, 
-        Y_val, 
-        X_test=None, 
-        Y_test=None
-    ):
+def _check_type(X_train, X_val, Y_train, Y_val, X_test=None, Y_test=None):
     """
     Checks data is of same type.
     """
     if type(X_train) != type(X_val):
         raise TypeError(f"types {type(X_train)} and {type(X_val)} do not match")
-    
     if type(Y_train) != type(Y_val):
         raise TypeError(f"types {type(Y_train)} and {type(Y_val)} do not match")
-
     if X_test is not None and type(X_test) != type(X_train):
         raise TypeError(f"types {type(X_test)} and {type(X_train)} do not match")
-        
     if Y_test is not None and type(Y_test) != type(Y_train):
         raise TypeError(f"types {type(Y_test)} and {type(Y_train)} do not match")
-    
     if Y_test is not None and type(Y_test) != type(Y_val):
         raise TypeError(f"types {type(Y_test)} and {type(Y_val)} do not match")
 
@@ -784,26 +992,20 @@ def validate_model(
     Checks DRFSC initialised correctly
     """
     if metric not in ['acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc']:
-        raise ValueError("metric must be one of 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'")
-    
+        raise ValueError(f"metric must be one of: ('acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'). Received {metric}")
     if not isinstance(n_hbins, int):
-        raise TypeError("n_hbins must be an integer")
-    
+        raise TypeError(f"n_hbins must be an integer. Received {type(n_hbins)}")
     if not isinstance(n_vbins, int):
-        raise TypeError("n_vbins must be an integer")
-    
+        raise TypeError(f"n_vbins must be an integer. Received {type(n_vbins)}")
     if output not in ['single', 'ensemble']:
-        raise ValueError("output must be one of 'single', 'ensemble'")
-    
+        raise ValueError(f"output must be one of: ('single', 'ensemble'). Received {output}")
     if feature_sharing not in ['all', 'latest', 'top_k']:
-        raise ValueError("feature_sharing must be one of 'all', 'latest', 'top_k'")
-    
+        raise ValueError(f"feature_sharing must be one of: ('all', 'latest', 'top_k'). Received {feature_sharing}")
     if feature_sharing == 'top_k':
         if k is None: 
-            raise ValueError("k must be an integer")
-        
+            raise ValueError(f"k must be an integer. Received None")
         if not isinstance(k, int):
-            raise TypeError("k must be an integer")
+            raise TypeError(f"k must be of type int. Received {type(k)}")
         
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import statsmodels.discrete.discrete_model as sm
 from scipy.stats import norm
-from sklearn.metrics import roc_auc_score, average_precision_score, accuracy_score, f1_score, precision_recall_curve, auc
+from src.utils import model_score
 import warnings
 from statsmodels.tools.sm_exceptions import ConvergenceWarning, HessianInversionWarning
 warnings.simplefilter('ignore', ConvergenceWarning)
@@ -28,15 +28,24 @@ class RFSC_base:
         """
         Parameters
         ----------
-            n_models (int, optional): number of models generated per iteration. Defaults to 300.
-            n_iters (int, optional): number of iterations. Defaults to 150.
-            tuning (float, optional): learning rate that dictates the speed of regressor inclusion probability (rip) convergence. Smaller values -> slower convergence. Defaults to 50.
-            tol (float, optional): tolerance condition. Defaults to 0.002.
-            alpha (float, optional): significance level for model pruning. Defaults to 0.99.
-            rip_cutoff (float, optional): determines rip threshold for feature inclusion in final model. Defaults to 1.
-            metric (str, optional): optimization metric. Defaults to 'roc_auc'.
-            verbose (bool, optional): Full description. Defaults to False.
-            upweight (float, optional): Upweights initial feature rips. Defaults to 1.
+        n_models : int 
+            Number of models generated per iteration. Default=300.
+        n_iters : int 
+            Number of iterations. Default is 150.
+        tuning : float 
+            Learning rate that dictates the speed of regressor inclusion probability (rip) convergence. Smaller values -> slower convergence. Default is 50.
+        tol : float 
+            Tolerance condition. Default is 0.002.
+        alpha : float 
+            Significance level for model pruning. Default is 0.99.
+        rip_cutoff : float 
+            Determines rip threshold for feature inclusion in final model. Default=1.
+        metric : str
+            Optimization metric. Default='roc_auc'. Options: 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'.
+        verbose : bool 
+            Provides extra information. Defaults is False.
+        upweight : float 
+            Upweights initial feature rips. Default is 1.
         """
         
         self.n_models = n_models
@@ -53,25 +62,19 @@ class RFSC_base:
         # self.enforce_max = False
         
         if self.metric not in ['acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc']:
-            raise ValueError("metric must be one of 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'")
-        
+            raise ValueError(f"metric must be one of 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'. Received: {self.metric} ")
         if not isinstance(self.n_models, int):
-            raise TypeError("n_models parameter must be an integer")
-
+            raise TypeError(f"n_models parameter must be an integer. Received: {type(self.n_models)}")
         if not isinstance(self.n_iters, int):
-            raise TypeError("n_iters parameter must be an integer")
-        
+            raise TypeError(f"n_iters parameter must be an integer. Received: {type(self.n_iters)}")
         if self.tol < 0:
-            raise ValueError("tol parameter must be a positive float")
-        
+            raise ValueError(f"tol parameter must be a positive number. Received: {self.tol}")
         if not 0 < self.alpha < 1:
-            raise ValueError("alpha parameter must be between 0 and 1") 
-        
+            raise ValueError(f"alpha parameter must be between 0 and 1. Received: {self.alpha}") 
         if self.tuning < 0:
-            raise ValueError("tuning parameter must be a positive float")
-        
+            raise ValueError(f"tuning parameter must be a positive number. Received: {self.tuning}")
         if not 0 < self.rip_cutoff <= 1:
-            raise ValueError("rip_cutoff parameter must be between 0 and 1")
+            raise ValueError(f"rip_cutoff parameter must be between 0 and 1. Received: {self.rip_cutoff}")
         
         print(
             f"{self.__class__.__name__} Initialised with with parameters: \n \
@@ -107,12 +110,10 @@ class RFSC(RFSC_base):
                 drfsc_index=drfsc_index
             )
             self._cleanup()
-            
+            return self
         else:
             raise AttributeError("No data loaded")
             
-        return self
-        
     def load_data_rfsc(
             self, 
             X_train: np.ndarray, 
@@ -124,13 +125,36 @@ class RFSC(RFSC_base):
             drfsc_index: tuple=None, 
             M=None
         ) -> None:
+        """
+        Loads the data passed from DRFSC into the RFSC object.
+
+        Parameters
+        ----------
+        X_train : np.ndarray
+            Training set data
+        X_val : np.ndarray
+            Validation set data
+        Y_train : np.ndarray
+            Training set labels
+        Y_val : np.ndarray
+            Validation set labels
+        feature_partition : list 
+            list of features indices for corresponding drfsc index
+        sample_partition : list
+            list of sample indices for corresponding drfsc index
+        drfsc_index : tupl
+            index of DRFSC bin of the form (r,i,j), where r is the drfsc iteration number, i is the vertical partition index, and j is the horizontal partition index
+        M : dict
+            dictionary containing relevant previous information for feature sharing
+        """
         
         if drfsc_index:
             self.drfsc_index = drfsc_index
-            self.features_passed = join_features(
+            feature_share = join_features(
                                         features=feature_partition, 
                                         M=M[drfsc_index[2]]
                                     )
+            self.features_passed = [int(i) for i in feature_share]
             self.X_train = X_train[:, self.features_passed][sample_partition, :]
             self.X_val = X_val[:, self.features_passed]
             self.Y_train = Y_train[sample_partition]
@@ -148,13 +172,28 @@ class RFSC(RFSC_base):
             X_val: np.ndarray,
             Y_train: np.ndarray,
             Y_val: np.ndarray,
-            drfsc_index=None
+            drfsc_index: tuple=None
         ) -> None:
+        """
+        This is the main section of the RFSC algorithm called by DRFSC. It extracts the model populations and evaluates them on the validation set, and updates the feature inclusion probabilities accordingly.
 
+        Parameters
+        ----------
+        X_train : np.ndarray
+            Training set data
+        X_val : np.ndarray
+            Validation set data
+        Y_train : np.ndarray
+            Training set labels
+        Y_val : np.ndarray
+            Validation set labels
+        drfsc_index : tuple, optional 
+            index of DRFSC bin of the form (r,i,j), where r is the drfsc iteration number, i is the vertical partition index, and j is the horizontal partition index
+
+        """
+        # initialization
         self.rnd_feats = {}
-        self.sig_feats = {}
-        
-        
+        self.sig_feats = {}        
         avg_model_size = np.empty((0,))
         avg_performance = np.empty((0,))
         _, n_features  = np.shape(X_train)
@@ -162,8 +201,8 @@ class RFSC(RFSC_base):
         mu = mu * self.upweight
         for t in range(self.n_iters):
             mask, performance_vector, size_vector = self.generate_models(
-                                                            X_train=X_train, 
-                                                            Y_train=Y_train, 
+                                                            X_train=X_train,
+                                                            Y_train=Y_train,
                                                             X_val=X_val, 
                                                             Y_val=Y_val, 
                                                             mu=mu
@@ -184,7 +223,7 @@ class RFSC(RFSC_base):
                 print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {max(np.abs(mu_update - mu)):.5f},") if self.verbose else None
 
             if tol_check(mu_update, mu, self.tol): # stop if tolerance is reached.
-                print("Tol reached. Number of features above rip_cutoff is {}".format(np.count_nonzero(mu_update >= self.rip_cutoff)))
+                print(f"Tol reached. Number of features above rip_cutoff is {np.count_nonzero(mu_update>=self.rip_cutoff)}")
                 break   
             
             if np.mean(performance_vector.ravel()[np.flatnonzero(performance_vector)]) > 0.99: # stop if the average performance is greater than 0.99.
@@ -193,15 +232,12 @@ class RFSC(RFSC_base):
             mu = mu_update
             
         self.iters = t
-        self.features_ = select_model(
-                            mu = mu, 
-                            rip_cutoff = self.rip_cutoff
-                        )
+        self.features_ = select_model(mu=mu, rip_cutoff=self.rip_cutoff)
         
         self.model = sm.Logit(
                         Y_train, 
                         X_train[:, self.features_]
-                    ).fit(disp=False, method = 'lbfgs')
+                    ).fit(disp=False, method='lbfgs')
         
         self.coef_ = self.model.params
         return self
@@ -219,17 +255,25 @@ class RFSC(RFSC_base):
 
         Parameters
         ----------
-            X_train (np.ndarray) : Training data.
-            Y_train (np.ndarray) : Training labels
-            X_val (np.ndarray) : Validation data
-            Y_val (np.ndarray) : Validation labels.
-            mu (np.ndarray): array of regressor inclusion probabilities of each feature
+        X_train : np.ndarray
+            Training data.
+        Y_train : np.ndarray
+            Training labels
+        X_val : np.ndarray
+            Validation data
+        Y_val : np.ndarray
+            Validation labels
+        mu : np.ndarray
+            Array of regressor inclusion probabilities of each feature
             
         Returns
         -------
-            mask_mtx (np.ndarray): matrix containing 1 in row i at column j if feature j was included in model i, else 0
-            performance_vector (np.ndarray): array containing performance of each model
-            size_vector (np.ndarray): array containing number of features in each model. 
+        mask_mtx : np.ndarray
+            Matrix containing 1 in row i at column j if feature j was included in model i, else 0
+        performance_vector : np.ndarray
+            Array containing performance of each model
+        size_vector : np.ndarray
+            Array containing number of features in each model
         """
         
         # initialise vectors
@@ -250,11 +294,11 @@ class RFSC(RFSC_base):
                     logreg_init = sm.Logit(
                                         Y_train, 
                                         X_train[:, generated_features]
-                                    ).fit(disp=False, method = 'lbfgs')
+                                    ).fit(disp=False, method='lbfgs')
                     significant_features = prune_model(
-                                                model = logreg_init, 
-                                                feature_ids = generated_features, 
-                                                alpha = self.alpha
+                                                model=logreg_init, 
+                                                feature_ids=generated_features, 
+                                                alpha=self.alpha
                                             )
                     self.rnd_feats[tuple(generated_features)] = significant_features
                     
@@ -271,13 +315,13 @@ class RFSC(RFSC_base):
 
             size_vector[i] = len(significant_features)
             mask_vector[significant_features] = 1
-            mask = np.concatenate((mask, mask_vector), axis = 0)
+            mask = np.concatenate((mask, mask_vector), axis=0)
             
             if tuple(significant_features) not in self.sig_feats.keys(): # check if model has been evaluated before
                 logreg_update = sm.Logit(
                                     Y_train, 
                                     X_train[:, significant_features]
-                                ).fit(disp=False, method = 'lbfgs')
+                                ).fit(disp=False, method='lbfgs')
                 prediction = logreg_update.predict(X_val[:, significant_features])
                 
                 performance_vector[i] = model_score(
@@ -305,15 +349,19 @@ class RFSC(RFSC_base):
 
         Parameters
         ----------
-            mask (np.ndarray) : matrix of shape (n_models, n_features) containing the mask of the models generated.
-            performance (np.ndarray) : performance evaluation for each model.
-            mu (np.ndarray) : current feature probability vector.
+        mask : np.ndarray
+            Matrix of shape (n_models, n_features) containing the mask of the models generated.
+        performance : np.ndarray
+            Performance evaluation for each model.
+        mu : np.ndarray
+            Current feature probability vector.
 
         Returns
         ----------
-            mu_update (np.ndarray) : updated feature probability vector.
+        mu_update : np.ndarray 
+            Updated feature probability vector.
         """
-        features_incld = np.sum(mask, axis = 0, dtype = np.int_) #(n_features,)
+        features_incld = np.sum(mask, axis=0) #(n_features,)
         features_excld = (np.ones(len(mu)) * self.n_models) - features_incld #(n_features,)
         features_performance = performance @ mask #(n_features,)
         
@@ -360,13 +408,17 @@ def tol_check(mu_update: np.ndarray, mu: np.ndarray, tol: float):
 
     Parameters
     ----------
-        mu_update (np.ndarray): mu at iteration t+1
-        mu (np.ndarray): mu at iteration t
-        tol (float): tolerance condition
+    mu_update : np.ndarray
+        mu at iteration t+1
+    mu : np.ndarray
+        mu at iteration t
+    tol : float
+        tolerance condition
 
     Returns
     -------
-        (bool): True max difference below tolerance, else False.
+    (bool): 
+        True max difference below tolerance, else False.
     """
     return np.abs(mu_update - mu).max() < tol
                 
@@ -374,7 +426,7 @@ def select_model(mu: np.ndarray, rip_cutoff: float) -> list:
     """
     Selects final model based on features that are above the regressor inclusion probability (rip) threshold
     """
-    return list((mu >= rip_cutoff).nonzero()[0])
+    return list((mu>=rip_cutoff).nonzero()[0])
 
 
 def gamma_update(
@@ -386,14 +438,18 @@ def gamma_update(
     
     Parameters
     ----------
-        performance (np.ndarray) : performance evaluation for each model.
-        tuning (float, optional) : tuning parameter to adjust convergence rate, default = 10.
+    performance : np.ndarray
+        performance evaluation for each model.
+    tuning : float, optional
+        tuning parameter to adjust convergence rate, default=10
         
     Returns
     ----------
-        gamma (float) : scaling factor for the update of the feature probability vector.
+    gamma : float
+        Scaling factor for the update of the feature probability vector
     """
-    return 1/(tuning*(np.max(performance) - np.mean(performance)) + 0.1)
+    gamma = 1/(tuning*(np.max(performance) - np.mean(performance)) + 0.1)
+    return gamma
 
 def generate_model(mu: np.ndarray) -> np.ndarray:
     """
@@ -401,10 +457,12 @@ def generate_model(mu: np.ndarray) -> np.ndarray:
     
     Parameters
     ----------
-        mu (np.ndarray): array of probabilities for each feature.
-        
+    mu : np.ndarray 
+        array of probabilities for each feature
+    
     Returns
     ----------
+    index : list 
         randomly generated numbers corresponding to features ids based on probabilities.
     """
     if np.count_nonzero(mu) == 0:
@@ -425,164 +483,25 @@ def prune_model(
     
     Parameters
     ----------
-        model (object) : logistic regression model object. See statsmodels.api.Logit
-        feature_ids (list) : feature ids included in the model.
-        alpha (float) : (0,1) significance level.
+    model : object
+        logistic regression model object. See statsmodels.api.Logit
+    feature_ids : list
+        feature ids included in the model.
+    alpha : float
+        (0,1) significance level.
         
     Returns
     ----------
-        significant feature ids (list).
+    sig_feature_ids : list
+        list of features above the significance level.
     """
-    return list(set(feature_ids[np.where(abs(model.tvalues) >= norm.ppf(alpha))]))
+    sig_feature_ids = list(set(feature_ids[np.where(abs(model.tvalues)>=norm.ppf(alpha))]))
+    return sig_feature_ids
 
-
-def evaluate_model(
-        model_features: list, 
-        X_train: np.ndarray, 
-        X_val: np.ndarray, 
-        X_test: np.ndarray, 
-        Y_train: np.ndarray, 
-        Y_val: np.ndarray, 
-        Y_test: np.ndarray, 
-        metric: str
-    ):
+def join_features(features: list, M: set or int) -> list:
     """
-    Evaluates the performance of a model on the test set.
-
-    Parameters
-    ----------
-        model_features (list) : Subset of features to be included in the model.
-        X_train (np.ndarray) : Training data.
-        X_val (np.ndarray) : Validation data
-        X_test (np.ndarray) : Test data.
-        Y_train (np.ndarray) : Training labels.
-        Y_val (np.ndarray) : Validation labels.
-        Y_test (np.ndarray) : Test labels.
-        metric (str) : {'acc', 'roc_auc', 'avg_prec','f1', 'auprc'}. Metric used to evaluate model performance.
-
-    Returns
-    -------
-        model_final (object) : Fitted logistic regression model. See statsmodels.Logit.
-        model_performance (float) : Performance of the model on the validation set.
+    Joins the feature partitions to the relevant information from previous iterations.
     """
-    
-    model_final = sm.Logit(
-                        np.concatenate((Y_train, Y_val), axis=0), 
-                        np.concatenate((X_train, X_val), axis=0)[:, model_features]
-                    ).fit(disp=False, method='lbfgs')
-    
-    label_prediction = model_final.predict(X_test[:, model_features]) # predict probabilities
-    
-    return model_final, model_score(
-                            method=metric, 
-                            y_true=Y_test, 
-                            y_pred_label=label_prediction.round(), 
-                            y_pred_prob= label_prediction
-                        )
-    
-def evaluate_interim_model(
-            model_features: list, 
-            X_train: np.ndarray, 
-            X_val: np.ndarray, 
-            Y_train: np.ndarray, 
-            Y_val: np.ndarray, 
-            metric: str
-        ):
-    """
-    Evaluates the performance of a model on the validation set.
-
-    Parameters
-    ----------
-        model_features (list) : Subset of features to be included in the model.
-        X_train (np.ndarray) : Training data.
-        X_val (np.ndarray) : Validation data
-        Y_train (np.ndarray) : Training labels.
-        Y_val (np.ndarray) : Validation labels.
-        metric (str) : {'acc', 'roc_auc', 'avg_prec','f1', 'auprc'}. Metric used to evaluate model performance.
-
-    Returns
-    -------
-        model_final (object) : Fitted logistic regression model. See statsmodels.Logit.
-        model_performance (float) : Performance of the model on the validation set.
-    """
-    model_final = sm.Logit(
-                    Y_train, 
-                    X_train[:, model_features]
-                ).fit(disp = False, method = 'lbfgs')
-
-    label_prediction = model_final.predict(X_val[:, model_features]) 
-    
-    return model_final, model_score(
-                            method=metric, 
-                            y_true=Y_val, 
-                            y_pred_label=label_prediction.round(), 
-                            y_pred_prob=label_prediction
-                        )
-
-def model_score(
-        method: str, 
-        y_true: np.ndarray,
-        y_pred_label: np.ndarray, 
-        y_pred_prob: np.ndarray
-    ):
-    
-    """
-    Evalutates model performance based on specified metric using sklearn.metrics.
-    
-    Parameters
-    ----------
-        method (str) : {'acc', 'roc_auc', 'avg_prec','f1', 'auprc'}. Metric used to evaluate model performance.
-        y_true (np.ndarray) : {0,1} ground truth labels.
-        y_pred_label (np.ndarray) : {0,1} predicted labels.
-        y_pred_prob (np.ndarray) : [0,1] predicted probabilities.
-        
-    Returns
-    -------
-        Value in range [0,1] representing model performance, based on specified metric.
-    """
-    methods = {
-        'acc' : accuracy_score(
-                    y_true=y_true, 
-                    y_pred=y_pred_label
-                ), \
-        'roc_auc' : roc_auc_score(
-                    y_true=y_true, 
-                    y_score=y_pred_prob, 
-                    average='weighted'
-                ), \
-        'avg_prec' : average_precision_score(
-                    y_true=y_true, 
-                    y_score=y_pred_prob, 
-                    average='weighted'
-                ), \
-        'f1' : f1_score(
-                    y_true=y_true, 
-                    y_pred=y_pred_label, 
-                    average='binary'
-                ), \
-        'auprc' : au_prc(
-                    y_true=y_true, 
-                    y_pred_prob=y_pred_prob
-                )}
-    return methods.get(method, 'Invalid method')
-
-def au_prc(y_true: np.ndarray, y_pred_prob: np.ndarray):
-    """
-    Computes the area under the precision-recall curve
-
-    Parameters
-    ----------
-        y_true (np.ndarray): array of {0,1} ground truth labels.
-        y_pred_prob (np.ndarray): array of [0,1] predicted probabilities.
-
-    Returns
-    -------
-        float: area under the precision-recall curve.
-    """
-    precision, recall, _ = precision_recall_curve(y_true=y_true, probas_pred=y_pred_prob)
-    return auc(x=recall, y=precision)
-
-def join_features(features: list, M) -> list:
     if isinstance(M, int):
         return list(set(features).union([M]))
     
