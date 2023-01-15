@@ -1,4 +1,5 @@
 site_name: drfsc for distributed Feature Selection
+edit_uri: 'blob/main/docs/'
 nav:
   - Home: index.md
   - 'Getting Started': 

@@ -5,6 +5,10 @@
 
 An open-source library for a distributed randomised feature selection and classification algorithm.
 
+## Code
+
+[drfsc](https://github.com/markcc309/drfsc)
+
 ## Contributors
 
 [Mark Chiu Chong](https://github.com/markcc309)
