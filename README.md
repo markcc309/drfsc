@@ -40,6 +40,6 @@ We invite anyone interested to use and modify this code under a MIT license.
 
 ## References
 
-Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018)[A feature selection and classification algorithm based on randomized extraction of model populations](https://doi.org/10.1109/tcyb.2017.2682418)
+Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). [A feature selection and classification algorithm based on randomized extraction of model populations](https://doi.org/10.1109/tcyb.2017.2682418)
 
 Brankovic, A., Piroddi, L. (2019). [A distributed feature selection scheme with partial information sharing](https://doi.org/10.1007/s10994-019-05809-y)
