@@ -343,7 +343,13 @@ class DRFSC:
         
             if len(result_obj) != (self.n_vbins * len(non_converged_hbins)):
                 print(f"result_obj length is {len(result_obj)}. Should be {(self.n_vbins * len(non_converged_hbins))}")
+                for result in result_obj:
+                    print(result.__dict__)
             
+            
+            for i,j in itertools.product(range(self.n_vbins), non_converged_hbins):
+                if (r,i,j) not in [x.drfsc_index for x in result_obj]:
+                    print(f"missing result {(r,i,j)}")
             for result in result_obj:
                 # predict on all sub-processes
                 result.model, result.evaluation = evaluate_interim_model(
@@ -404,14 +410,11 @@ class DRFSC:
             
         if self.output == 'single':
             self.features_num = select_single_model(J_best=self.J_best)[0]
-            self.model, self.model_score = evaluate_interim_model(
-                                                model_features=self.features_num, 
-                                                X_train=X_train, 
-                                                X_val=X_val, 
-                                                Y_train=Y_train, 
-                                                Y_val=Y_val, 
-                                                metric=self.metric
-                                            )
+            self.model = sm.Logit(
+                    self.labels, 
+                    self.data[:, self.features_num]
+                ).fit(disp=False, method='lbfgs')
+            
         for value in self.results_full.values(): 
             # remove the features_passed from results_full
             value.pop() 
@@ -605,7 +608,10 @@ class DRFSC:
                 dict updated with global feature indices.
         """
         for i,j in itertools.product(range(self.n_vbins), hbins):
-            iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
+            if (r,i,j) in iter_results.keys():
+                iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
+            else:
+                iter_results[(r,i,j)][0] = [0]
     
         return iter_results
             
@@ -668,7 +674,7 @@ class DRFSC:
         if self.output != 'ensemble':
             raise ValueError("Final model only valid for ensemble output")
         
-        if self.input_feature_names is not None:
+        if self.input_feature_names:
             idx = self.input_feature_names
         else:
             idx = range(self.data.shape[1])

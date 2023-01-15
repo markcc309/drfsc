@@ -209,7 +209,7 @@ def evaluate_model(
                             y_pred_label=label_prediction.round(), 
                             y_pred_prob=label_prediction
                         )
-    
+
 def evaluate_interim_model(
         model_features: list, 
         X_train: np.ndarray, 
@@ -259,6 +259,17 @@ def evaluate_interim_model(
 
 
 
+def evaluate_interim_models(result_list, X_train, X_val, Y_train, Y_val, metric):
+    for result in result_list:
+        result.model, result.evaluation = evaluate_interim_model(
+                                                    model_features=result.features_, 
+                                                    X_train=X_train, 
+                                                    X_val=X_val,
+                                                    Y_train=Y_train, 
+                                                    Y_val=Y_val,
+                                                    metric=metric
+                                                )
+    return 
 
 def model_score(
         method: str, 

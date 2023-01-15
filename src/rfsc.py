@@ -100,7 +100,7 @@ class RFSC(RFSC_base):
         for key, value in params.items():
             self.__setattr__(key, value)
         
-    def fit_drfsc(self, drfsc_index):
+    def fit_drfsc(self, drfsc_index: tuple):
         if hasattr(self, 'X_train'):
             self.rfsc_main(
                 X_train=self.X_train, 
@@ -111,7 +111,7 @@ class RFSC(RFSC_base):
             )
             self._cleanup()
             return self
-        else:
+        else: 
             raise AttributeError("No data loaded")
             
     def load_data_rfsc(
@@ -216,8 +216,7 @@ class RFSC(RFSC_base):
             
             avg_performance = np.append(avg_performance, np.mean(performance_vector.ravel()[np.flatnonzero(performance_vector)]))
             avg_model_size = np.append(avg_model_size, np.mean(size_vector.ravel()[np.flatnonzero(performance_vector)]))
-
-            if drfsc_index:
+            if drfsc_index is None:
                 print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {np.abs(mu_update - mu).max():.5f}") if self.verbose else None
             else:
                 print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {max(np.abs(mu_update - mu)):.5f},") if self.verbose else None
@@ -233,7 +232,6 @@ class RFSC(RFSC_base):
             
         self.iters = t
         self.features_ = select_model(mu=mu, rip_cutoff=self.rip_cutoff)
-        
         self.model = sm.Logit(
                         Y_train, 
                         X_train[:, self.features_]
@@ -396,10 +394,7 @@ class RFSC(RFSC_base):
         """
         Removes data from RFSC to save memory
         """
-        for attr in ['X_train', 'X_val', 'Y_train', 'Y_val']:
-            if hasattr(self, attr): delattr(self, attr)
-                
-        for attr in ['rnd_feats', 'sig_feats']:
+        for attr in ['X_train', 'X_val', 'Y_train', 'Y_val', 'rnd_feats', 'sig_feats']:
             if hasattr(self, attr): delattr(self, attr)
             
 def tol_check(mu_update: np.ndarray, mu: np.ndarray, tol: float):
@@ -495,7 +490,7 @@ def prune_model(
     sig_feature_ids : list
         list of features above the significance level.
     """
-    sig_feature_ids = list(set(feature_ids[np.where(abs(model.tvalues)>=norm.ppf(alpha))]))
+    sig_feature_ids = list(set(feature_ids[np.where(model.pvalues<=alpha)]))
     return sig_feature_ids
 
 def join_features(features: list, M: set or int) -> list:
