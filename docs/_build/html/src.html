@@ -1,127 +1,991 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>src package &mdash; drfsc 0.0.1 documentation</title>
+  
 
-    <title>src package &#8212; drfsc 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="src" href="modules.html" />
+    <link rel="prev" title="src" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> drfsc
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.drfsc">src.drfsc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.rfsc">src.rfsc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.utils">src.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">drfsc</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+      <li>src package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <section id="src-package">
 <h1>src package<a class="headerlink" href="#src-package" title="Permalink to this headline">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="src-drfsc-module">
-<h2>src.drfsc module<a class="headerlink" href="#src-drfsc-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-src.drfsc">
+<span id="src-drfsc-module"></span><h2>src.drfsc module<a class="headerlink" href="#module-src.drfsc" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.drfsc.</span></span><span class="sig-name descname"><span class="pre">DRFSC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_vbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_runs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redistribute_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_sharing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'single'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'roc_auc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polynomial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Distributed Randomised Feature Selection for Classification (DRFSC)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.convergence_check">
+<span class="sig-name descname"><span class="pre">convergence_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_star</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_converged_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.convergence_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.convergence_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the tolerance condition has been met for the current iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>int</em>) – current interation number</p></li>
+<li><p><strong>J_star</strong> (<em>dict</em>) – dictionary of best models from each horizontal partition.</p></li>
+<li><p><strong>non_converged_hbins</strong> (<em>list</em>) – list of horizontal partitions that have not converged</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>hbins_not_converged</strong> – indicies of horizontal partition that have not converged</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.feature_importance">
+<span class="sig-name descname"><span class="pre">feature_importance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.feature_importance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.feature_importance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a bar plot of the features of the model and their contribution to the final prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>figure</strong> – hisogram of feature coefficients for features of the final model.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>matplotlib figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.feature_share">
+<span class="sig-name descname"><span class="pre">feature_share</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_full</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comb_sig_feats_gt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_converged_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.feature_share"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.feature_share" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the features to be shared with each bin in the subsequent iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>int</em>) – current iteration</p></li>
+<li><p><strong>results_full</strong> (<em>dict</em>) – dictionary containing the results from all iterations</p></li>
+<li><p><strong>comb_sig_feats_gt</strong> (<em>list</em>) – list of global feature indices from models in the current iteration</p></li>
+<li><p><strong>non_converged_hbins</strong> (<em>list</em>) – list of horizontal partition indicies that have not converged</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>M</strong> – dictionary containing the features to be shared with each bin in the subsequent iteration</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.final_model">
+<span class="sig-name descname"><span class="pre">final_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_ensemble</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.final_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.final_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for generating the final model based on the ensemble of models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_ensemble</strong> (<em>dict</em>) – contains the ensemble of models. Each key is a separate model, and the value is a list containing a list of the feature indices used for that model, the mapped feature names, and the model object itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main function for fitting the model. Returns the a single final model if output == ‘single’, else returns a model ensemble based on the number of horizontal partitions (n_hbins).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Train set data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Validation set data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Train set labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Validation set labels</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.generate_ensemble">
+<span class="sig-name descname"><span class="pre">generate_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_best</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.generate_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.generate_ensemble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the model ensemble based on the best model for each horizontal partition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_test</strong> (<em>np.ndarray</em>) – Test set data</p></li>
+<li><p><strong>J_best</strong> (<em>dict</em>) – dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ensemble</strong> (<em>dict</em>) – dictionary that contains as keys the names of the models making up the ensemble. For each key, the value is a list containing a list of the feature indices used for that model, and the model object itself.</p></li>
+<li><p><strong>ensemble_proba</strong> (<em>pd.DataFrame</em>) – dataframe containing the predicted probabilities for each model in the ensemble</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.generate_processes">
+<span class="sig-name descname"><span class="pre">generate_processes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.generate_processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.generate_processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.get_rfsc_params">
+<span class="sig-name descname"><span class="pre">get_rfsc_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.get_rfsc_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.get_rfsc_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter for RFSC parameters. Returns a dictionary of the current RFSC parameters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polynomial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preprocesses the data in the required way for the DRFSC model. Can be used to load data into the model if it has not been loaded yet. Scales the data to [0,1] and creates polynomial expansion based on the passed ‘polynomial’ parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Train set data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Validation set data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Train set labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Validation set labels</p></li>
+<li><p><strong>X_test</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em><em>, </em><em>optional</em>) – Test set data. Only required if postprocessing is required. Defaults to None.</p></li>
+<li><p><strong>Y_test</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame optional</em>) – Test set labels. Only required if postprocessing is required. Defaults to None.</p></li>
+<li><p><strong>polynomial</strong> (<em>int</em><em>, </em><em>optional</em>) – degree of polynomial features to use. Defaults to 1.</p></li>
+<li><p><strong>preprocess</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will scale-data, create dummies for categorical variables, and create polynomial features based on passed <cite>polynomial</cite> parameter. If False, will only convert data to numpy arrays. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>X_train, X_val, Y_train, Y_val, X_test, Y_test</strong> – Preprocessed data and labels</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.map_feature_indices_to_names">
+<span class="sig-name descname"><span class="pre">map_feature_indices_to_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.map_feature_indices_to_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.map_feature_indices_to_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the feature indices to the original feature names, if they exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<em>str</em>) – output type. Either ‘single’ or ‘ensemble’.</p></li>
+<li><p><strong>final_model</strong> (<em>dict</em><em> or </em><em>list</em>) – contains the converged models from the final iteration for each horizontal parition. If output is ‘single’, it is a single list, containing a list of feature indices and model object. If output is ‘ensemble’, it is a dictionary, with the keys being the horizontal partition index, and the values being a list containing the feature indices, and model object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>final_model</strong> – returns final_model with the feature indices mapped to the original feature names.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict or list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.map_local_feats_to_gt">
+<span class="sig-name descname"><span class="pre">map_local_feats_to_gt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.map_local_feats_to_gt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.map_local_feats_to_gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps local feature indices to global feature indices for each model in the current iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>iter_results</strong> – dict updated with global feature indices.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.pos_neg_prediction">
+<span class="sig-name descname"><span class="pre">pos_neg_prediction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.pos_neg_prediction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.pos_neg_prediction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a plot of the positive and negative parts of the prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_index</strong> (<em>int</em>) – Index of the data observation to be plotted. If X_test is not provided, then the index is relative to the provided training/validation data. If X_test is provided, then the index is relative to the provided test data. Default is 0.</p></li>
+<li><p><strong>X_test</strong> (<em>np.array</em><em> or </em><em>pd.DataFrame</em>) – Test data to be used for prediction. If provided, then the index is relative to the provided test data. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>figure</strong> – figure shows, for a given sample (indexed by data_index), the positive and negative parts of the prediction. That is, it takes the value of the coefficients and multiplies them by the feature values. The positive and negative parts of the prediction are then plotted.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the best model to predict on the test set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X_test</strong> (<em>np.ndarray</em>) – Test set data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray containing the predicted labels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the best model to predict on the test set, returns labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X_test</strong> (<em>np.ndarray</em>) – Test set data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray containing the predicted probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to evaluate the final model on the test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_test</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – Test set data</p></li>
+<li><p><strong>Y_test</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em><em> or </em><em>pd.Series</em>) – Test set labels</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – Metric to use for evaluation. By default uses the metric specified in the constructor. Other options: (‘acc’, ‘roc_auc’, ‘weighted’, ‘avg_prec’, ‘f1’, ‘auprc’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>evaluation</strong> – returns the score of the model based on the metric specified.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.set_rfsc_params">
+<span class="sig-name descname"><span class="pre">set_rfsc_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.set_rfsc_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.set_rfsc_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setter for RFSC parameters. Updates the RFSC parameters with the given dictionary. Dictionary must be in the form of {parameter_name: parameter_value}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_models</strong> (<em>int</em>) – Number of models generated per iteration. Default=300.</p></li>
+<li><p><strong>n_iters</strong> (<em>int</em>) – Number of iterations. Default=150.</p></li>
+<li><p><strong>tuning</strong> (<em>float</em>) – Learning rate that dictates the speed of regressor inclusion probability (rip) convergence. Smaller values -&gt; slower convergence. Default=50.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerance condition. Default=0.002.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Significance level for model pruning. Default=0.99.</p></li>
+<li><p><strong>rip_cutoff</strong> (<em>float</em>) – Determines rip threshold for feature inclusion in final model. Default=1.</p></li>
+<li><p><strong>metric</strong> (<em>str</em>) – Optimization metric. Default=’roc_auc’. Options: ‘acc’, ‘roc_auc’, ‘weighted’, ‘avg_prec’, ‘f1’, ‘auprc’.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Provides extra information. Defaults=False.</p></li>
+<li><p><strong>upweight</strong> (<em>float</em>) – Upweights initial feature rips. Default=1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.single_prediction">
+<span class="sig-name descname"><span class="pre">single_prediction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.single_prediction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.single_prediction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a plot of the single prediction of the final model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_index</strong> (<em>int</em>) – Index of the data observation to be plotted. If X_test is not provided, then the index is relative to the provided training/validation data. If X_test is provided, then the index is relative to the provided test data. Default is 0.</p></li>
+<li><p><strong>X_test</strong> (<em>np.array</em><em> or </em><em>pd.DataFrame</em>) – Test data to be used for prediction. If provided, then the index is relative to the provided test data. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>figure</strong> – Shows for a given sample (indexed by data_index) the coefficients of the final model, weighted by the feature values for the indexed observation.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.drfsc.DRFSC.update_full_results">
+<span class="sig-name descname"><span class="pre">update_full_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_full</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#DRFSC.update_full_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.DRFSC.update_full_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the full results dictionary with the results from the current iteration</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.drfsc.select_single_model">
+<span class="sig-prename descclassname"><span class="pre">src.drfsc.</span></span><span class="sig-name descname"><span class="pre">select_single_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_best</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#select_single_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.select_single_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns model with highest performance evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>J_best</strong> (<em>dict</em>) – dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>best_model</strong> – List containing the best model for the entire dataset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.drfsc.update_best_models">
+<span class="sig-prename descclassname"><span class="pre">src.drfsc.</span></span><span class="sig-name descname"><span class="pre">update_best_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_best</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_star</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_iter_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_converged_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#update_best_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.update_best_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares results from the current iteration against current best models. If a model from the current iteration is better, it is saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>J_best</strong> (<em>dict</em>) – dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)</p></li>
+<li><p><strong>J_star</strong> (<em>dict</em>) – dictionary containing only the performance evaluation of the best model for each horizontal partition (list)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.drfsc.validate_data">
+<span class="sig-prename descclassname"><span class="pre">src.drfsc.</span></span><span class="sig-name descname"><span class="pre">validate_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#validate_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.validate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks data is of correct shape</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.drfsc.validate_model">
+<span class="sig-prename descclassname"><span class="pre">src.drfsc.</span></span><span class="sig-name descname"><span class="pre">validate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_vbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_sharing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/drfsc.html#validate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.drfsc.validate_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks DRFSC initialised correctly</p>
+</dd></dl>
+
 </section>
-<section id="src-rfsc-module">
-<h2>src.rfsc module<a class="headerlink" href="#src-rfsc-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-src.rfsc">
+<span id="src-rfsc-module"></span><h2>src.rfsc module<a class="headerlink" href="#module-src.rfsc" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.rfsc.RFSC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">RFSC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.rfsc.RFSC_base" title="src.rfsc.RFSC_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">src.rfsc.RFSC_base</span></code></a></p>
+<p>Implements RFSC algorithm based on parameters inherited from RFSC_base.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.fit_drfsc">
+<span class="sig-name descname"><span class="pre">fit_drfsc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drfsc_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.fit_drfsc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.fit_drfsc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.generate_models">
+<span class="sig-name descname"><span class="pre">generate_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.generate_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.generate_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates random models and for each model evaluates the significance of each feature. Statistically significant features are retained and resultant model is regressed again and its performance on validation partition is evaluated and stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> (<em>np.ndarray</em>) – Training data.</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em>) – Training labels</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em>) – Validation data</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em>) – Validation labels</p></li>
+<li><p><strong>mu</strong> (<em>np.ndarray</em>) – Array of regressor inclusion probabilities of each feature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mask_mtx</strong> (<em>np.ndarray</em>) – Matrix containing 1 in row i at column j if feature j was included in model i, else 0</p></li>
+<li><p><strong>performance_vector</strong> (<em>np.ndarray</em>) – Array containing performance of each model</p></li>
+<li><p><strong>size_vector</strong> (<em>np.ndarray</em>) – Array containing number of features in each model</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.load_data_rfsc">
+<span class="sig-name descname"><span class="pre">load_data_rfsc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_partition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_partition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drfsc_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.load_data_rfsc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.load_data_rfsc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the data passed from DRFSC into the RFSC object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> (<em>np.ndarray</em>) – Training set data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em>) – Validation set data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em>) – Training set labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em>) – Validation set labels</p></li>
+<li><p><strong>feature_partition</strong> (<em>list</em>) – list of features indices for corresponding drfsc index</p></li>
+<li><p><strong>sample_partition</strong> (<em>list</em>) – list of sample indices for corresponding drfsc index</p></li>
+<li><p><strong>drfsc_index</strong> (<em>tupl</em>) – index of DRFSC bin of the form (r,i,j), where r is the drfsc iteration number, i is the vertical partition index, and j is the horizontal partition index</p></li>
+<li><p><strong>M</strong> (<em>dict</em>) – dictionary containing relevant previous information for feature sharing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.predict_label">
+<span class="sig-name descname"><span class="pre">predict_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.predict_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.predict_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict {0,1} labels of test observations given fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict {0,1} probability of test observations given fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.rfsc_main">
+<span class="sig-name descname"><span class="pre">rfsc_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drfsc_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.rfsc_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.rfsc_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main section of the RFSC algorithm called by DRFSC. It extracts the model populations and evaluates them on the validation set, and updates the feature inclusion probabilities accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_train</strong> (<em>np.ndarray</em>) – Training set data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em>) – Validation set data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em>) – Training set labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em>) – Validation set labels</p></li>
+<li><p><strong>drfsc_index</strong> (<em>tuple</em><em>, </em><em>optional</em>) – index of DRFSC bin of the form (r,i,j), where r is the drfsc iteration number, i is the vertical partition index, and j is the horizontal partition index</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.set_attr">
+<span class="sig-name descname"><span class="pre">set_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.set_attr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.set_attr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.rfsc.RFSC.update_feature_probability">
+<span class="sig-name descname"><span class="pre">update_feature_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">performance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#RFSC.update_feature_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC.update_feature_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the feature probability vector mu based on the performance of the models generated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask</strong> (<em>np.ndarray</em>) – Matrix of shape (n_models, n_features) containing the mask of the models generated.</p></li>
+<li><p><strong>performance</strong> (<em>np.ndarray</em>) – Performance evaluation for each model.</p></li>
+<li><p><strong>mu</strong> (<em>np.ndarray</em>) – Current feature probability vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mu_update</strong> – Updated feature probability vector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.rfsc.RFSC_base">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">RFSC_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">150</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tuning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rip_cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'roc_auc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upweight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#RFSC_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.RFSC_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for RFSC. Used to update RFSC parameters for DRFSC model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.gamma_update">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">gamma_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">performance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tuning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#gamma_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.gamma_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale the update of the feature probability vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>performance</strong> (<em>np.ndarray</em>) – performance evaluation for each model.</p></li>
+<li><p><strong>tuning</strong> (<em>float</em><em>, </em><em>optional</em>) – tuning parameter to adjust convergence rate, default=10</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gamma</strong> – Scaling factor for the update of the feature probability vector</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.generate_model">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">generate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#generate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.generate_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a vector of probabilities and returns a random model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mu</strong> (<em>np.ndarray</em>) – array of probabilities for each feature</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>index</strong> – randomly generated numbers corresponding to features ids based on probabilities.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.join_features">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">join_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#join_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.join_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joins the feature partitions to the relevant information from previous iterations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.prune_model">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">prune_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#prune_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.prune_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether features are signifincant at selected signifincance level. Returns index of significant features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>object</em>) – logistic regression model object. See statsmodels.api.Logit</p></li>
+<li><p><strong>feature_ids</strong> (<em>list</em>) – feature ids included in the model.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – (0,1) significance level.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sig_feature_ids</strong> – list of features above the significance level.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.select_model">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">select_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rip_cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/rfsc.html#select_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.select_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects final model based on features that are above the regressor inclusion probability (rip) threshold</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.rfsc.tol_check">
+<span class="sig-prename descclassname"><span class="pre">src.rfsc.</span></span><span class="sig-name descname"><span class="pre">tol_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu_update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/rfsc.html#tol_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.rfsc.tol_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if maximum difference between mu vectors is below tolerance threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu_update</strong> (<em>np.ndarray</em>) – mu at iteration t+1</p></li>
+<li><p><strong>mu</strong> (<em>np.ndarray</em>) – mu at iteration t</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – tolerance condition</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True max difference below tolerance, else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="src-utils-module">
-<h2>src.utils module<a class="headerlink" href="#src-utils-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-src.utils">
+<span id="src-utils-module"></span><h2>src.utils module<a class="headerlink" href="#module-src.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.au_prc">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">au_prc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#au_prc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.au_prc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the area under the precision-recall curve</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<em>np.ndarray</em>) – array of {0,1} ground truth labels</p></li>
+<li><p><strong>y_pred_prob</strong> (<em>np.ndarray</em>) – array of [0,1] predicted probabilities</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>float</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>area under the precision-recall curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.balanced_horizontal_partition">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">balanced_horizontal_partition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/utils.html#balanced_horizontal_partition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.balanced_horizontal_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates class-balanced horizontal partitions for the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>np.ndarray</em>) – data labels.</p></li>
+<li><p><strong>n_hbins</strong> (<em>int</em>) – number of horizontal partiions of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>horizontal_partitions</strong> – Class balanced version of horizontal_distribution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.create_balanced_distributions">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">create_balanced_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_vbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#create_balanced_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.create_balanced_distributions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines outputs from vertical_distribution and balanced_horizontal_partition to create class-balanced vertical and horizontal partitions for the dataset.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.data_info">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">data_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#data_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.data_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints some information about the loaded data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.evaluate_interim_model">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">evaluate_interim_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#evaluate_interim_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.evaluate_interim_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the performance of a model on the validation set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_features</strong> (<em>list</em>) – Subset of features to be included in the model</p></li>
+<li><p><strong>X_train</strong> (<em>np.ndarray</em>) – Training data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em>) – Validation data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em>) – Training labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em>) – Validation labels</p></li>
+<li><p><strong>metric</strong> (<em>str {'acc'</em><em>, </em><em>'roc_auc'</em><em>, </em><em>'avg_prec'</em><em>,</em><em>'f1'</em><em>, </em><em>'auprc'}</em>) – metric used to evaluate model performance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>model_final</strong> (<em>object</em>) – Fitted logistic regression model. See statsmodels.Logit</p></li>
+<li><p><strong>model_performance</strong> (<em>float</em>) – Performance of the model on the validation set</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.evaluate_interim_models">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">evaluate_interim_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#evaluate_interim_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.evaluate_interim_models" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.evaluate_model">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">evaluate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#evaluate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.evaluate_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the performance of a model on the test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_features</strong> (<em>list</em>) – Subset of features to be included in the model</p></li>
+<li><p><strong>X_train</strong> (<em>np.ndarray</em>) – Training data</p></li>
+<li><p><strong>X_val</strong> (<em>np.ndarray</em>) – Validation data</p></li>
+<li><p><strong>Y_train</strong> (<em>np.ndarray</em>) – Training labels</p></li>
+<li><p><strong>Y_val</strong> (<em>np.ndarray</em>) – Validation labels</p></li>
+<li><p><strong>metric</strong> (<em>str {'acc'</em><em>, </em><em>'roc_auc'</em><em>, </em><em>'avg_prec'</em><em>,</em><em>'f1'</em><em>, </em><em>'auprc'}</em>) – metric used to evaluate model performance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>model_final</strong> (<em>object</em>) – Fitted logistic regression model. See statsmodels.Logit</p></li>
+<li><p><strong>model_performance</strong> (<em>float</em>) – Performance of the model on the validation set</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.extend_features">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">extend_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/utils.html#extend_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.extend_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses sklearn.preprocessing to create polynomial features of data and add bias term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – data to be transformed</p></li>
+<li><p><strong>degree</strong> (<em>int</em><em>, </em><em>optional</em>) – Degree of non-linearity to generate. Defaults to 1. By default just adds a bias term.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data_out</strong> – Polynomial transformed data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray or pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.horizontal_distribution">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">horizontal_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/utils.html#horizontal_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.horizontal_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates horizontal bins for the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_samples</strong> (<em>int</em>) – number of samples in the data.</p></li>
+<li><p><strong>n_hbins</strong> (<em>int</em>) – number of horizontal partiions of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>horizontal_partitions</strong> – Contains in each column the sample indexes of the samples that belong to that horizontal bin.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.model_score">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">model_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#model_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.model_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evalutates model performance based on specified metric using sklearn.metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str {'acc'</em><em>, </em><em>'roc_auc'</em><em>, </em><em>'avg_prec'</em><em>,</em><em>'f1'</em><em>, </em><em>'auprc'}</em>) – metric used to evaluate model performance</p></li>
+<li><p><strong>y_true</strong> (<em>np.ndarray</em>) – {0,1} ground truth labels</p></li>
+<li><p><strong>y_pred_label</strong> (<em>np.ndarray</em>) – {0,1} predicted labels</p></li>
+<li><p><strong>y_pred_prob</strong> (<em>np.ndarray</em>) – [0,1] predicted probabilities</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Value in range [0,1] representing model performance, based on specified metric</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.remove_feature_duplication">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">remove_feature_duplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_arrays</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="reference internal" href="_modules/src/utils.html#remove_feature_duplication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.remove_feature_duplication" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.scale_data">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">scale_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/utils.html#scale_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.scale_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses sklearn.preprocessing to rescale feature values to [0,1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>np.ndarray</em><em> or </em><em>pd.DataFrame</em>) – data to be transformed</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data_out</strong> – [0,1] transform of data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray or pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.vertical_distribution">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">vertical_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_vbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="_modules/src/utils.html#vertical_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.vertical_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that creates vertical bins for the features in the dataset for use by DRFSC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_feats</strong> (<em>int</em>) – number of features in the data</p></li>
+<li><p><strong>n_vbins</strong> (<em>int</em>) – number of vertical partitions of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>vertical_partitions</strong> – Contains in each column the features that belong to that vertical bin</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">drfsc</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">src package</a></li>
-</ul>
-</li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">src</a><ul>
-      <li>Previous: <a href="modules.html" title="previous chapter">src</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, Mark Chiu Chong
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2023, Mark Chiu Chong.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/src.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>
