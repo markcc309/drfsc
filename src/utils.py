@@ -4,6 +4,7 @@ import random
 from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
 from sklearn.metrics import roc_auc_score, average_precision_score, accuracy_score, f1_score, precision_recall_curve, auc
 import statsmodels.discrete.discrete_model as sm
+from typing import Union
 
 # helper functions for DRFSC
 def create_balanced_distributions(labels: np.ndarray, n_feats: int, n_vbins: int, n_hbins: int):
@@ -25,7 +26,7 @@ def balanced_horizontal_partition(labels: np.ndarray, n_hbins: int) -> np.ndarra
         data labels.
     n_hbins : int
         number of horizontal partiions of the data.
-        
+    
     Returns
     -------
     horizontal_partitions : np.ndarray
@@ -56,7 +57,7 @@ def horizontal_distribution(n_samples: int, n_hbins: int) -> np.ndarray:
         number of samples in the data.
     n_hbins : int
         number of horizontal partiions of the data.
-        
+    
     Returns
     -------
     horizontal_partitions : np.ndarray 
@@ -81,7 +82,7 @@ def vertical_distribution(n_feats: int, n_vbins: int) -> np.ndarray:
         number of features in the data
     n_vbins : int
         number of vertical partitions of the data.
-        
+    
     Returns
     -------
     vertical_partitions : np.ndarray 
@@ -99,7 +100,7 @@ def vertical_distribution(n_feats: int, n_vbins: int) -> np.ndarray:
     return vertical_partitions
 
 
-def scale_data(data: np.ndarray or pd.DataFrame) -> np.ndarray or pd.DataFrame:
+def scale_data(data: Union[np.ndarray, pd.DataFrame]) -> Union[np.ndarray, pd.DataFrame]:
     """ 
     Uses sklearn.preprocessing to rescale feature values to [0,1].
     
@@ -107,7 +108,7 @@ def scale_data(data: np.ndarray or pd.DataFrame) -> np.ndarray or pd.DataFrame:
     ----------
     data : np.ndarray or pd.DataFrame
         data to be transformed
-        
+    
     Returns
     -------
     data_out : np.ndarray or pd.DataFrame
@@ -125,7 +126,7 @@ def scale_data(data: np.ndarray or pd.DataFrame) -> np.ndarray or pd.DataFrame:
 
     return data_out
 
-def extend_features(data: np.ndarray or pd.DataFrame, degree: int=1) -> np.ndarray or pd.DataFrame:
+def extend_features(data: Union[np.ndarray, pd.DataFrame], degree: int=1) -> Union[np.ndarray, pd.DataFrame]:
     """ 
     Uses sklearn.preprocessing to create polynomial features of data and add bias term.
     
@@ -135,7 +136,7 @@ def extend_features(data: np.ndarray or pd.DataFrame, degree: int=1) -> np.ndarr
         data to be transformed
     degree : int, optional
         Degree of non-linearity to generate. Defaults to 1. By default just adds a bias term.
-        
+    
     Returns
     -------
     data_out : np.ndarray or pd.DataFrame
@@ -276,7 +277,7 @@ def model_score(
         y_true: np.ndarray,
         y_pred_label: np.ndarray, 
         y_pred_prob: np.ndarray
-    ):
+    ) -> float:
     
     """
     Evalutates model performance based on specified metric using sklearn.metrics.
@@ -294,7 +295,8 @@ def model_score(
     
     Returns
     -------
-    Value in range [0,1] representing model performance, based on specified metric
+    out : float
+        output based on metric
     """
     methods = {
         'acc' : accuracy_score(
@@ -320,9 +322,10 @@ def model_score(
                     y_true=y_true, 
                     y_pred_prob=y_pred_prob
                 )}
-    return methods.get(method, 'Invalid method')
+    out = methods.get(method, 'Invalid method')
+    return out
         
-def au_prc(y_true: np.ndarray, y_pred_prob: np.ndarray):
+def au_prc(y_true: np.ndarray, y_pred_prob: np.ndarray) -> float:
     """
     Computes the area under the precision-recall curve
 
@@ -335,10 +338,12 @@ def au_prc(y_true: np.ndarray, y_pred_prob: np.ndarray):
 
     Returns
     -------
-    float: area under the precision-recall curve
+    _auc : float
+        area under the precision-recall curve
     """
     precision, recall, _ = precision_recall_curve(y_true=y_true, probas_pred=y_pred_prob)
-    return auc(x=recall, y=precision)
+    _auc = auc(x=recall, y=precision)
+    return _auc
         
 def remove_feature_duplication(list_of_arrays: list) -> set:
     return set(np.concatenate(list_of_arrays)) if list_of_arrays else set(list_of_arrays)

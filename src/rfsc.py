@@ -7,6 +7,7 @@ from statsmodels.tools.sm_exceptions import ConvergenceWarning, HessianInversion
 warnings.simplefilter('ignore', ConvergenceWarning)
 warnings.simplefilter('ignore', RuntimeWarning)
 warnings.simplefilter('ignore', HessianInversionWarning)
+from typing import Union
 # import random
 
 class RFSC_base:
@@ -90,13 +91,24 @@ class RFSC_base:
 
 class RFSC(RFSC_base):
     """
-    Implements RFSC algorithm based on parameters inherited from RFSC_base.
+    Implements RFSC algorithm based on parameters inherited from RFSC_base. 
     """
     
     def __init__(self, *args):
+        """
+        Inherits parameters from RFSC_base. See help(RFSC_base.__init__) for more information.
+        """
         super().__init__(*args)
 
     def set_attr(self, params: dict):
+        """
+        Setter for RFSC attributes. Used to update RFSC parameters for DRFSC model.
+
+        Parameters
+        ----------
+        params : dict
+            Dictionary of parameters to update.
+        """
         for key, value in params.items():
             self.__setattr__(key, value)
         
@@ -262,16 +274,16 @@ class RFSC(RFSC_base):
         Y_val : np.ndarray
             Validation labels
         mu : np.ndarray
-            Array of regressor inclusion probabilities of each feature
-            
+            Array of regressor inclusion probabilities of each feature.
+        
         Returns
         -------
         mask_mtx : np.ndarray
-            Matrix containing 1 in row i at column j if feature j was included in model i, else 0
+            Matrix containing 1 in row i at column j if feature j was included in model i, else 0.
         performance_vector : np.ndarray
-            Array containing performance of each model
+            Array containing performance of each model.
         size_vector : np.ndarray
-            Array containing number of features in each model
+            Array containing number of features in each model.
         """
         
         # initialise vectors
@@ -355,7 +367,7 @@ class RFSC(RFSC_base):
             Current feature probability vector.
 
         Returns
-        ----------
+        -------
         mu_update : np.ndarray 
             Updated feature probability vector.
         """
@@ -420,9 +432,21 @@ def tol_check(mu_update: np.ndarray, mu: np.ndarray, tol: float):
 def select_model(mu: np.ndarray, rip_cutoff: float) -> list:
     """
     Selects final model based on features that are above the regressor inclusion probability (rip) threshold
+    
+    Parameters
+    ----------
+    mu : np.ndarray
+        current feature probability vector
+    rip_cutoff : float
+        regressor inclusion probability threshold
+    
+    Returns
+    -------
+    model_feats : list
+        list of features that are above the rip threshold
     """
-    return list((mu>=rip_cutoff).nonzero()[0])
-
+    model_feats = list((mu>=rip_cutoff).nonzero()[0])
+    return model_feats
 
 def gamma_update(
         performance: np.ndarray, 
@@ -437,9 +461,9 @@ def gamma_update(
         performance evaluation for each model.
     tuning : float, optional
         tuning parameter to adjust convergence rate, default=10
-        
+    
     Returns
-    ----------
+    -------
     gamma : float
         Scaling factor for the update of the feature probability vector
     """
@@ -456,8 +480,8 @@ def generate_model(mu: np.ndarray) -> np.ndarray:
         array of probabilities for each feature
     
     Returns
-    ----------
-    index : list 
+    -------
+    index : np.ndarray
         randomly generated numbers corresponding to features ids based on probabilities.
     """
     if np.count_nonzero(mu) == 0:
@@ -484,16 +508,16 @@ def prune_model(
         feature ids included in the model.
     alpha : float
         (0,1) significance level.
-        
+    
     Returns
-    ----------
+    -------
     sig_feature_ids : list
         list of features above the significance level.
     """
     sig_feature_ids = list(set(feature_ids[np.where(model.pvalues<=alpha)]))
     return sig_feature_ids
 
-def join_features(features: list, M: set or int) -> list:
+def join_features(features: list, M: Union[set, int]) -> list:
     """
     Joins the feature partitions to the relevant information from previous iterations.
     """

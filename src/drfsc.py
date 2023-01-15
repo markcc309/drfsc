@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import statsmodels.discrete.discrete_model as sm
 from src.utils import *
 from src.rfsc import RFSC, RFSC_base
+from typing import Union, Tuple
 
 class DRFSC:
     """
@@ -105,26 +106,7 @@ class DRFSC:
         """
         Setter for RFSC parameters. Updates the RFSC parameters with the given dictionary. Dictionary must be in the form of {parameter_name: parameter_value}.
         
-        Parameters
-        ----------
-        n_models : int 
-            Number of models generated per iteration. Default=300.
-        n_iters : int 
-            Number of iterations. Default=150.
-        tuning : float 
-            Learning rate that dictates the speed of regressor inclusion probability (rip) convergence. Smaller values -> slower convergence. Default=50.
-        tol : float 
-            Tolerance condition. Default=0.002.
-        alpha : float 
-            Significance level for model pruning. Default=0.99.
-        rip_cutoff : float 
-            Determines rip threshold for feature inclusion in final model. Default=1.
-        metric : str
-            Optimization metric. Default='roc_auc'. Options: 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'.
-        verbose : bool 
-            Provides extra information. Defaults=False.
-        upweight : float 
-            Upweights initial feature rips. Default=1.
+        To view available parameters, see help(RFSC_base.__init__)
         """
         for key, value in params.items():
             self.RFSC_model.__setattr__(key, value)
@@ -134,12 +116,12 @@ class DRFSC:
         return {(r,i,j): RFSC() for i in range(v_bins) for j in h_bins}
     
     def load_data(self, 
-            X_train: np.ndarray or pd.DataFrame, 
-            X_val: np.ndarray or pd.DataFrame, 
-            Y_train: np.ndarray or pd.DataFrame, 
-            Y_val: np.ndarray or pd.DataFrame, 
-            X_test: np.ndarray or pd.DataFrame=None, 
-            Y_test: np.ndarray or pd.DataFrame=None, 
+            X_train: Union[np.ndarray, pd.DataFrame], 
+            X_val: Union[np.ndarray, pd.DataFrame], 
+            Y_train: Union[np.ndarray, pd.DataFrame], 
+            Y_val: Union[np.ndarray, pd.DataFrame], 
+            X_test: Union[np.ndarray, pd.DataFrame]=None, 
+            Y_test: Union[np.ndarray, pd.DataFrame]=None, 
             polynomial:int=1, 
             preprocess:bool=True
         ):
@@ -240,10 +222,10 @@ class DRFSC:
     
     def fit(
             self, 
-            X_train: np.ndarray or pd.DataFrame, 
-            X_val: np.ndarray or pd.DataFrame,  
-            Y_train: np.ndarray or pd.DataFrame, 
-            Y_val: np.ndarray or pd.DataFrame
+            X_train: Union[np.ndarray, pd.DataFrame], 
+            X_val: Union[np.ndarray, pd.DataFrame],  
+            Y_train: Union[np.ndarray, pd.DataFrame], 
+            Y_val: Union[np.ndarray, pd.DataFrame]
         ):
         """
         The main function for fitting the model. Returns the a single final model if output == 'single', else returns a model ensemble based on the number of horizontal partitions (n_hbins).
@@ -271,7 +253,7 @@ class DRFSC:
                                                     )
 
         if any(isinstance(x, pd.DataFrame) for x in [X_train, X_val, Y_train, Y_val]):
-            raise TypeError("Data must be numpy arrays")
+            raise TypeError("Data must be type np.ndarray")
         
         n_samples, n_features = X_train.shape
         
@@ -423,10 +405,10 @@ class DRFSC:
     
     def score(
         self,
-        X_test: np.ndarray or pd.DataFrame, 
-        Y_test: np.ndarray or pd.DataFrame or pd.Series,
+        X_test: Union[np.ndarray, pd.DataFrame], 
+        Y_test: Union[np.ndarray, pd.DataFrame, pd.Series],
         metric: str=None
-    ):
+    ) -> dict:
         """
         Used to evaluate the final model on the test set.
 
@@ -440,7 +422,7 @@ class DRFSC:
             Metric to use for evaluation. By default uses the metric specified in the constructor. Other options: ('acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc').
 
         Returns
-        ----------
+        -------
         evaluation : dict
             returns the score of the model based on the metric specified.
         """
@@ -462,19 +444,19 @@ class DRFSC:
             
         return {'metric': eval_metric, 'score': score}
                 
-    def predict(self, X_test):
+    def predict(self, X_test: np.ndarray) -> np.ndarray:
         """
-        Uses the best model to predict on the test set
+        Uses the best model to predict on the test set.
 
         Parameters
         ----------
-        X_test : np.ndarray 
-            Test set data
+        X_test : np.ndarray
+            Test set data.
 
         Returns
-        ----------
-        np.ndarray containing the predicted labels
-        
+        -------
+        ret : np.ndarray
+            The predicted labels.
         """
         if self.output == 'ensemble':
             model_ens, self.ensemble_pred = self.generate_ensemble(
@@ -486,29 +468,29 @@ class DRFSC:
                                         final_model=model_ens
                                     )
             self.final_model(self.model_ensemble)
-            
-            return self.ensemble_pred['majority'].to_numpy()
+            ret = self.ensemble_pred['majority'].to_numpy()
             
         else: # output == 'single'
             self.label_pred = self.predict_proba(X_test).round()
-            return self.label_pred
+            ret = self.label_pred
+        return ret
     
     
-    def predict_proba(self, X_test: np.ndarray):
+    def predict_proba(self, X_test: np.ndarray) -> np.ndarray:
         """
-        Uses the best model to predict on the test set, returns labels 
+        Uses the best model to predict on the test set, returns labels.
 
         Parameters
         ----------
-        X_test : np.ndarray 
-            Test set data
-            
+        X_test : np.ndarray
+            Test set data.
+        
         Returns
         -------
-        np.ndarray containing the predicted probabilities
+        proba_ : np.ndarray
+            The predicted probabilities.
         """
         if self.output == 'ensemble':
-
             model_ens, self.ensemble_pred = self.generate_ensemble(
                             X_test=X_test, 
                             J_best=self.J_best, 
@@ -518,10 +500,8 @@ class DRFSC:
                                         final_model=model_ens
                                     )
             self.final_model(self.model_ensemble)
+            proba_ = self.ensemble_pred['mean_prob'].to_numpy()
             
-            return self.ensemble_pred['mean_prob'].to_numpy()
-
-        
         else: #self.output == 'single'
             self.coef_ = self.model.params
             self.label_pred = self.model.predict(X_test[:, self.features_num])
@@ -533,7 +513,9 @@ class DRFSC:
             else:
                 self.features_ = self.features_num
             
-            return self.label_pred
+            proba_ = self.label_pred
+            
+        return proba_
         
     def generate_ensemble(
             self, 
@@ -551,7 +533,7 @@ class DRFSC:
             dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)
 
         Returns
-        ----------
+        -------
         ensemble : dict
             dictionary that contains as keys the names of the models making up the ensemble. For each key, the value is a list containing a list of the feature indices used for that model, and the model object itself.
         ensemble_proba : pd.DataFrame
@@ -559,7 +541,7 @@ class DRFSC:
         """
         
         if not all(isinstance(x, np.ndarray) for x in [self.data, X_test, self.labels]):
-            raise TypeError("All inputs must be numpy arrays")
+            raise TypeError("All inputs must have type np.ndarray")
 
         # get the best model for each horizontal partition   
         ensemble = {}
@@ -660,7 +642,7 @@ class DRFSC:
 
         return M
     
-    def final_model(self, model_ensemble: dict):
+    def final_model(self, model_ensemble: dict) -> None:
         """
         Helper function for generating the final model based on the ensemble of models.
 
@@ -668,7 +650,10 @@ class DRFSC:
         ----------
         model_ensemble : dict
             contains the ensemble of models. Each key is a separate model, and the value is a list containing a list of the feature indices used for that model, the mapped feature names, and the model object itself.
-            
+        
+        Returns
+        -------
+        : None
         """
 
         if self.output != 'ensemble':
@@ -701,7 +686,7 @@ class DRFSC:
     def map_feature_indices_to_names(
             self, 
             output: str, 
-            final_model: dict or list
+            final_model: Union[dict, list]
         ):
         """
         Maps the feature indices to the original feature names, if they exist.
@@ -732,7 +717,7 @@ class DRFSC:
             r: int, 
             J_star: dict, 
             non_converged_hbins: list
-        ):
+        ) -> list:
         """
         Checks if the tolerance condition has been met for the current iteration.
         
@@ -763,7 +748,7 @@ class DRFSC:
         hbins_not_converged = [bin for bin in non_converged_hbins if bin not in hbins_converged]
         return hbins_not_converged 
         
-    def feature_importance(self):
+    def feature_importance(self) -> plt.figure:
         """
         Creates a bar plot of the features of the model and their contribution to the final prediction.
         
@@ -814,10 +799,10 @@ class DRFSC:
     def pos_neg_prediction(
             self, 
             data_index: int=0,
-            X_test: np.ndarray or pd.DataFrame=None
-        ):
+            X_test: Union[np.ndarray, pd.DataFrame]=None
+        ) -> plt.figure:
         """
-        Creates a plot of the positive and negative parts of the prediction.
+        Creates a plot of the positive and negative parts of the prediction. Returned figure shows, for a given sample (indexed by data_index), the value of the coefficients and multiplies them by the feature values. These components of the prediction are then plotted.
         
         Parameters
         ----------
@@ -828,8 +813,8 @@ class DRFSC:
         
         Returns
         -------
-        figure : matplotlib figure
-            figure shows, for a given sample (indexed by data_index), the positive and negative parts of the prediction. That is, it takes the value of the coefficients and multiplies them by the feature values. The positive and negative parts of the prediction are then plotted.
+        figure : matplotlib.pyplot.figure
+            output figure
         """
         if self.output == 'ensemble':
             features_num = self.model_features_num
@@ -840,7 +825,7 @@ class DRFSC:
     
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
-                raise TypeError("X_test must be a numpy array or pandas dataframe")
+                raise TypeError("X_test must be type np.ndarray or pd.DataFrame")
             if isinstance(X_test, pd.DataFrame):
                 X_test = X_test.to_numpy()
                 
@@ -862,16 +847,16 @@ class DRFSC:
         
         plt.figure()
         plt.title("+/- Positive and Negative Parts of Prediction")
-        
-        return plt.bar(*zip(*disp.items()))
+        figure = plt.bar(*zip(*disp.items()))
+        return figure
         
     def single_prediction(            
             self, 
             data_index: int=0,
-            X_test: np.ndarray or pd.DataFrame=None
-        ):
+            X_test: Union[np.ndarray, pd.DataFrame]=None
+        ) -> plt.figure:
         """
-        Creates a plot of the single prediction of the final model
+        Creates a plot of the single prediction of the final model. Figure shows for a given sample (indexed by data_index) the coefficients of the final model, weighted by the feature values for the indexed observation.
         
         Parameters
         ----------
@@ -879,11 +864,11 @@ class DRFSC:
             Index of the data observation to be plotted. If X_test is not provided, then the index is relative to the provided training/validation data. If X_test is provided, then the index is relative to the provided test data. Default is 0.
         X_test : np.array or pd.DataFrame
             Test data to be used for prediction. If provided, then the index is relative to the provided test data. Default is None.
-            
+        
         Returns
         -------
-        figure : matplotlib figure
-            Shows for a given sample (indexed by data_index) the coefficients of the final model, weighted by the feature values for the indexed observation. 
+        figure : matplotlib.pyplot.figure
+            output figure
         """
         if self.output == 'ensemble':
             feat_num = self.model_features_num
@@ -896,7 +881,7 @@ class DRFSC:
             
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
-                raise TypeError("X_test must be a numpy array or pandas dataframe")
+                raise TypeError("X_test must be type np.ndarray or pd.DataFrame")
             if isinstance(X_test, pd.DataFrame):
                 X_test = X_test.to_numpy()
         
@@ -910,7 +895,8 @@ class DRFSC:
         plt.title(f"Single Prediction Plot for Sample {data_index}")
         plt.ylabel("Sample-weighted prediction")
         plt.xlabel("Feature Name")
-        return plt.bar(*zip(*disp. items()))
+        figure = plt.bar(*zip(*disp.items()))
+        return figure
     
 def update_best_models(
         J_best: dict, 
@@ -918,7 +904,7 @@ def update_best_models(
         single_iter_results: dict, 
         non_converged_hbins: list, 
         metric: str
-    ):
+    ) -> Tuple[dict, dict]:
     """
     Compares results from the current iteration against current best models. If a model from the current iteration is better, it is saved.
     
@@ -938,7 +924,7 @@ def update_best_models(
         
     return J_best, J_star
 
-def select_single_model(J_best: dict):
+def select_single_model(J_best: dict) -> list:
     """
     Returns model with highest performance evaluation
     
