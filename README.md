@@ -5,9 +5,9 @@
 
 An open-source library for a distributed randomised feature selection and classification algorithm.
 
-## Contributors
+## Authors and Contributors:
 
-[Mark Chiu Chong](https://github.com/markcc309)
+[Mark Chiu Chong](https://github.com/markcc309), [Aida Brankovic](https://github.com/aibrank).
 
 ## Overview
 
@@ -40,6 +40,15 @@ We invite anyone interested to use and modify this code under a MIT license.
 
 ## References
 
-Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). [A feature selection and classification algorithm based on randomized extraction of model populations](https://doi.org/10.1109/tcyb.2017.2682418)
+The package has been developed based on research that came out of the Polytechnical University of Milan. The interested reader is referred to [2] for details related to the distribution procedure, and to [1] for a more thorough mathematical overview and for experimental comparisons to various alternate feature selection methods.
 
-Brankovic, A., Piroddi, L. (2019). [A distributed feature selection scheme with partial information sharing](https://doi.org/10.1007/s10994-019-05809-y)
+[1] Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). [A feature selection and classification algorithm based on randomized extraction of model populations](https://doi.org/10.1109/tcyb.2017.2682418)
+
+[2] Brankovic, A., Piroddi, L. (2019). [A distributed feature selection scheme with partial information sharing](https://doi.org/10.1007/s10994-019-05809-y)
+
+## Citations
+
+This package is developed in CSIRO’s Australian e-Health Research Centre. If you use `drfsc` package in your research we would appreciate a citation to the appropriate paper(s):
+  - For general use of `drfsc` package you can read/cite the original article 
+  - For information/use of the Randomised Feature Selection and classification concept you can read/cite original article [1].
+  - For information/use of the Distributed Feature Selection architecture with partial information you can read/cite original article [2].
