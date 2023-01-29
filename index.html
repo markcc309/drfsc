@@ -248,8 +248,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributors" class="md-nav__link">
-    Contributors
+  <a href="#authors-and-contributors" class="md-nav__link">
+    Authors and Contributors
   </a>
   
 </li>
@@ -285,6 +285,13 @@
         <li class="md-nav__item">
   <a href="#references" class="md-nav__link">
     References
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citations" class="md-nav__link">
+    Citations
   </a>
   
 </li>
@@ -453,8 +460,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributors" class="md-nav__link">
-    Contributors
+  <a href="#authors-and-contributors" class="md-nav__link">
+    Authors and Contributors
   </a>
   
 </li>
@@ -494,6 +501,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#citations" class="md-nav__link">
+    Citations
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -521,10 +535,11 @@
 <p>An open-source library for a distributed randomised feature selection and classification algorithm.</p>
 <h2 id="code">Code</h2>
 <p><a href="https://github.com/markcc309/drfsc">drfsc</a></p>
-<h2 id="contributors">Contributors</h2>
-<p><a href="https://github.com/markcc309">Mark Chiu Chong</a></p>
+<h2 id="authors-and-contributors">Authors and Contributors</h2>
+<p><a href="https://github.com/markcc309">Mark Chiu Chong</a>
+<a href="https://github.com/aibrank">Aida Brankovic</a></p>
 <h2 id="overview">Overview</h2>
-<p><code>drfsc</code> is an open-source Python implementation of the Distributed Randomised Feature Selection algorithm for Classification problems (D-RFSC). Beside addressing some of the shortcomings of the conventional FS method, its good performance has previously been shown on a range of benchmark datasets. However, to date no Python implementation is available. <code>drfsc</code> offers an easy to use, parallelized probabilistic population-based feature selection scheme that is flexible and can be adapted to a wide range of binary classification problems and is particularly useful for large data problems where model interpretability and model explainability is of high importance. It provides modules for model fitting, evaluation, and visualization. Tutorial notebooks are provided to demonstrate the use of the package.</p>
+<p><code>drfsc</code> is an open-source Python implementation of the Distributed Randomised Feature Selection algorithm for Classification problems (D-RFSC) [2]. Beside addressing some of the shortcomings of the conventional FS method, its good performance has previously been shown on a range of benchmark datasets. However, to date no Python implementation is available. <code>drfsc</code> offers an easy to use, parallelized probabilistic population-based feature selection scheme that is flexible and can be adapted to a wide range of binary classification problems and is particularly useful for large data problems where model interpretability and model explainability is of high importance. It provides modules for model fitting, evaluation, and visualization. Tutorial notebooks are provided to demonstrate the use of the package.</p>
 <h2 id="installation">Installation</h2>
 <p>The easiest way to install is from PyPI: just use</p>
 <p><code>pip install drfsc</code></p>
@@ -543,8 +558,16 @@
 <li><a href="https://www.statsmodels.org/stable/index.html">statsmodels</a></li>
 </ul>
 <h2 id="references">References</h2>
-<p>Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). <a href="https://doi.org/10.1109/tcyb.2017.2682418">A feature selection and classification algorithm based on randomized extraction of model populations</a></p>
-<p>Brankovic, A., Piroddi, L. (2019). <a href="https://doi.org/10.1007/s10994-019-05809-y">A distributed feature selection scheme with partial information sharing</a></p>
+<p>The package has been developed based on research that came out at the Polytechnical University of Milan. The interested reader is referred to [2] for details related to the distribution procedure, and to [1] for a more thorough mathematical overview and for experimental comparisons to various alternate feature selection methods.</p>
+<p>[1] Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). <a href="https://doi.org/10.1109/tcyb.2017.2682418">A feature selection and classification algorithm based on randomized extraction of model populations</a></p>
+<p>[2] Brankovic, A., Piroddi, L. (2019). <a href="https://doi.org/10.1007/s10994-019-05809-y.">A distributed feature selection scheme with partial information sharing.</a></p>
+<h2 id="citations">Citations</h2>
+<p>This package is developed in CSIRO’s Australian e-Health Research Centre. If you use <code>drfsc</code> package in your research we would appreciate a citation to the appropriate paper(s):</p>
+<ul>
+<li>For general use of <code>drfsc</code> package you can read/cite original article.</li>
+<li>For information/use of the Randomised Feature Selection and classification concept you can read/cite original article <a href="https://doi.org/10.1109/tcyb.2017.2682418">[1]</a>.</li>
+<li>For information/use of the Distributed Feature Selection architecture with partial information you can read/cite original article <a href="https://doi.org/10.1007/s10994-019-05809-y">[2]</a>.</li>
+</ul>
 
 
 
