@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
     
     
       
-        <title>drfsc for distributed Feature Selection</title>
+        <title>Removing Correlated Features - drfsc for distributed Feature Selection</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
         
       
       
@@ -37,9 +37,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#drfsc" class="md-skip">
+        <a href="#removing-correlated-features" class="md-skip">
           Skip to content
         </a>
       
@@ -78,7 +78,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="drfsc for distributed Feature Selection" class="md-header__button md-logo" aria-label="drfsc for distributed Feature Selection" data-md-component="logo">
+    <a href=".." title="drfsc for distributed Feature Selection" class="md-header__button md-logo" aria-label="drfsc for distributed Feature Selection" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -97,7 +97,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Removing Correlated Features
             
           </span>
         </div>
@@ -176,7 +176,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="drfsc for distributed Feature Selection" class="md-nav__button md-logo" aria-label="drfsc for distributed Feature Selection" data-md-component="logo">
+    <a href=".." title="drfsc for distributed Feature Selection" class="md-nav__button md-logo" aria-label="drfsc for distributed Feature Selection" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -205,101 +205,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Home
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         Home
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    Code
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authors-and-contributors" class="md-nav__link">
-    Authors and Contributors
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    Installation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    License
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    Dependencies
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    References
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citations" class="md-nav__link">
-    Citations
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -338,7 +248,7 @@
   
   
     <li class="md-nav__item">
-      <a href="notebooks/01_fitting_single/" class="md-nav__link">
+      <a href="../notebooks/01_fitting_single/" class="md-nav__link">
         Fitting a single model with drfsc
       </a>
     </li>
@@ -352,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="notebooks/02_fitting_ensemble/" class="md-nav__link">
+      <a href="../notebooks/02_fitting_ensemble/" class="md-nav__link">
         Fitting ensemble models with drfsc
       </a>
     </li>
@@ -374,7 +284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="drfsc_api/" class="md-nav__link">
+      <a href="../drfsc_api/" class="md-nav__link">
         DRFSC API Docs
       </a>
     </li>
@@ -389,7 +299,7 @@
   
   
     <li class="md-nav__item">
-      <a href="rfsc_base_api/" class="md-nav__link">
+      <a href="../rfsc_base_api/" class="md-nav__link">
         RFSC_base API Docs
       </a>
     </li>
@@ -404,7 +314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="rfsc_api/" class="md-nav__link">
+      <a href="../rfsc_api/" class="md-nav__link">
         RFSC API Docs
       </a>
     </li>
@@ -419,7 +329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="utils/" class="md-nav__link">
+      <a href="../utils/" class="md-nav__link">
         utils
       </a>
     </li>
@@ -432,11 +342,48 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="removing_correlated_features/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Removing Correlated Features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Removing Correlated Features
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#removing-correlated-features" class="md-nav__link">
+    Removing correlated features
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -458,8 +405,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -468,57 +413,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    Code
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authors-and-contributors" class="md-nav__link">
-    Authors and Contributors
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    Installation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    License
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    Dependencies
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    References
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citations" class="md-nav__link">
-    Citations
+  <a href="#removing-correlated-features" class="md-nav__link">
+    Removing correlated features
   </a>
   
 </li>
@@ -537,52 +433,16 @@
                 
                   
 
-  <a href="https://github.com/markcc309/drfsc/blob/main/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/markcc309/drfsc/blob/main/docs/removing_correlated_features.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-<h1 id="drfsc">drfsc</h1>
-<p><a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a></p>
-<!-- [![PyPI version](add here)(url)] -->
+  <h1>Removing Correlated Features</h1>
 
-<p>An open-source library for a distributed randomised feature selection and classification algorithm.</p>
-<h2 id="code">Code</h2>
-<p><a href="https://github.com/markcc309/drfsc">drfsc</a></p>
-<h2 id="authors-and-contributors">Authors and Contributors</h2>
-<p><a href="https://github.com/markcc309">Mark Chiu Chong</a>
-<a href="https://github.com/aibrank">Aida Brankovic</a></p>
-<h2 id="overview">Overview</h2>
-<p><code>drfsc</code> is an open-source Python implementation of the Distributed Randomised Feature Selection algorithm for Classification problems (D-RFSC) [2]. Beside addressing some of the shortcomings of the conventional FS method, its good performance has previously been shown on a range of benchmark datasets. However, to date no Python implementation is available. <code>drfsc</code> offers an easy to use, parallelized probabilistic population-based feature selection scheme that is flexible and can be adapted to a wide range of binary classification problems and is particularly useful for large data problems where model interpretability and model explainability is of high importance. It provides modules for model fitting, evaluation, and visualization. Tutorial notebooks are provided to demonstrate the use of the package.</p>
-<h2 id="installation">Installation</h2>
-<p>The easiest way to install is from PyPI: just use</p>
-<p><code>pip install drfsc</code></p>
-<p>To install from source: clone this git repo, enter the directory, and run</p>
-<p><code>python setup.py install</code></p>
-<h2 id="license">License</h2>
-<p>We invite anyone interested to use and modify this code under a MIT license.</p>
-<h2 id="dependencies">Dependencies</h2>
-<p><code>drfsc</code> depends on the following packages:</p>
-<ul>
-<li><a href="https://numpy.org/">numpy</a></li>
-<li><a href="https://www.scipy.org/">scipy</a></li>
-<li><a href="https://pandas.pydata.org/">pandas</a></li>
-<li><a href="https://matplotlib.org/">matplotlib</a></li>
-<li><a href="https://scikit-learn.org/stable/">scikit-learn</a></li>
-<li><a href="https://www.statsmodels.org/stable/index.html">statsmodels</a></li>
-</ul>
-<h2 id="references">References</h2>
-<p>The package has been developed based on research that came out at the Polytechnical University of Milan. The interested reader is referred to [2] for details related to the distribution procedure, and to [1] for a more thorough mathematical overview and for experimental comparisons to various alternate feature selection methods.</p>
-<p>[1] Brankovic, A., Falsone, A., Prandini, M., Piroddi, L. (2018). <a href="https://doi.org/10.1109/tcyb.2017.2682418">A feature selection and classification algorithm based on randomized extraction of model populations</a></p>
-<p>[2] Brankovic, A., Piroddi, L. (2019). <a href="https://doi.org/10.1007/s10994-019-05809-y.">A distributed feature selection scheme with partial information sharing.</a></p>
-<h2 id="citations">Citations</h2>
-<p>This package is developed in CSIRO’s Australian e-Health Research Centre. If you use <code>drfsc</code> package in your research we would appreciate a citation to the appropriate paper(s):</p>
-<ul>
-<li>For general use of <code>drfsc</code> package you can read/cite original article.</li>
-<li>For information/use of the Randomised Feature Selection and classification concept you can read/cite original article <a href="https://doi.org/10.1109/tcyb.2017.2682418">[1]</a>.</li>
-<li>For information/use of the Distributed Feature Selection architecture with partial information you can read/cite original article <a href="https://doi.org/10.1007/s10994-019-05809-y">[2]</a>.</li>
-</ul>
+<h2 id="removing-correlated-features">Removing correlated features</h2>
+<p>Though multicollinearity does not influence the predictions, it affects the coefficients and p-values. drfsc algorithm performs statistical t-test during the optimization procedure and presence of highly corelated features may adversely affect the algorithm’s execution time. To account for this, the user can perform correlation analysis, visualize correlation matrix, and remove desired correlated features by removing these columns. To ease the correlation analysis df_CorrCount DataFrame lists all features and corresponding correlation counts, i.e., number of features with which each feature is highly correlated. To view the correlation DataFrame, the user can call DRSC.get_corr_df(X, level), where level is the correlation threshold (by default 0.8).</p>
 
 
 
@@ -602,21 +462,21 @@
     
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
-      
         
-        <a href="notebooks/01_fitting_single/" class="md-footer__link md-footer__link--next" aria-label="Next: Fitting a single model with drfsc" rel="next">
+        <a href="../utils/" class="md-footer__link md-footer__link--prev" aria-label="Previous: utils" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
-                Next
+                Previous
               </span>
-              Fitting a single model with drfsc
+              utils
             </div>
           </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
         </a>
+      
       
     </nav>
   
@@ -641,10 +501,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
     
     
