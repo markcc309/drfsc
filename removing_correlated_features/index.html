@@ -442,7 +442,7 @@
   <h1>Removing Correlated Features</h1>
 
 <h2 id="removing-correlated-features">Removing correlated features</h2>
-<p>Though multicollinearity does not influence the predictions, it affects the coefficients and p-values. drfsc algorithm performs statistical t-test during the optimization procedure and presence of highly corelated features may adversely affect the algorithm’s execution time. To account for this, the user can perform correlation analysis, visualize correlation matrix, and remove desired correlated features by removing these columns. To ease the correlation analysis df_CorrCount DataFrame lists all features and corresponding correlation counts, i.e., number of features with which each feature is highly correlated. To view the correlation DataFrame, the user can call DRSC.get_corr_df(X, level), where level is the correlation threshold (by default 0.8).</p>
+<p>Though multicollinearity does not influence the predictions, it affects the coefficients and p-values. drfsc algorithm performs statistical t-test during the optimization procedure and presence of highly corelated features may adversely affect the algorithm’s execution time. To account for this, the user can perform correlation analysis, visualize correlation matrix, and remove desired correlated features by removing these columns. To ease the correlation analysis df_CorrCount DataFrame lists all features and corresponding correlation counts, i.e., number of features with which each feature is highly correlated. To view the correlation DataFrame, the user can call <code>DRFSC.get_corr_df(X, level)</code>, where level is the correlation threshold (by default 0.8).</p>
 
 
 
