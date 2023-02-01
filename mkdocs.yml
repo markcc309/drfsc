@@ -9,6 +9,7 @@ nav:
   - RFSC_base API Docs: rfsc_base_api.md
   - RFSC API Docs: rfsc_api.md
   - utils: utils.md
+  - Removing Correlated Features: removing_correlated_features.md
 theme:
   name: "material"
 repo_url: https://github.com/markcc309/drfsc

@@ -998,10 +998,3 @@ def validate_model(
             raise ValueError(f"k must be an integer. Received None")
         if not isinstance(k, int):
             raise TypeError(f"k must be of type int. Received {type(k)}")
-        
-
-
-        
-        
-
-        

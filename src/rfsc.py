@@ -237,7 +237,7 @@ class RFSC(RFSC_base):
                 print(f"Tol reached. Number of features above rip_cutoff is {np.count_nonzero(mu_update>=self.rip_cutoff)}")
                 break   
             
-            if np.mean(performance_vector.ravel()[np.flatnonzero(performance_vector)]) > 0.99: # stop if the average performance is greater than 0.99.
+            if avg_performance[t] > 0.99: # stop if the average performance is greater than 0.99.
                 break
             
             mu = mu_update

@@ -368,4 +368,20 @@ def data_info(X_train=None, X_val=None, X_test=None, Y_train=None, Y_val=None, Y
     print(f"'Y_test'  SHAPE: {Y_test.shape}") if Y_test is not None else None
     print(f"          TYPE:  {type(Y_test).__name__} \n -------------") if Y_test is not None else None
 
+def get_corr_df(X, level=0.8):
+    '''
 
+    Calculation how many times a feature was an in high correlation.
+
+    Count = 1 denotes only autocorrelation.
+
+    '''
+    corr = X.corr()
+
+    #display(corr.style.background_gradient(cmap='coolwarm'))
+    counts = []
+    for cnt in np.arange(0,X.shape[1]):
+        highCorr_idx= np.where(corr>level)
+        counts.append((len(np.where(highCorr_idx[0]==cnt)[0])+len(np.where(highCorr_idx[1]==cnt)[0]))/2)
+
+    return pd.DataFrame(counts,X.columns,columns=['Count'])
