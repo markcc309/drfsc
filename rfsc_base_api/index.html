@@ -221,22 +221,37 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_2">
+        <label class="md-nav__link" for="__nav_3">
           Getting Started
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
+        <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           Getting Started
         </label>
@@ -333,14 +348,14 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#src.rfsc.RFSC_base" class="md-nav__link">
-    src.rfsc.RFSC_base
+  <a href="#src.drfsc.rfsc.RFSC_base" class="md-nav__link">
+    src.drfsc.rfsc.RFSC_base
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#src.rfsc.RFSC_base.__init__" class="md-nav__link">
+  <a href="#src.drfsc.rfsc.RFSC_base.__init__" class="md-nav__link">
     __init__()
   </a>
   
@@ -426,14 +441,14 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#src.rfsc.RFSC_base" class="md-nav__link">
-    src.rfsc.RFSC_base
+  <a href="#src.drfsc.rfsc.RFSC_base" class="md-nav__link">
+    src.drfsc.rfsc.RFSC_base
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#src.rfsc.RFSC_base.__init__" class="md-nav__link">
+  <a href="#src.drfsc.rfsc.RFSC_base.__init__" class="md-nav__link">
     __init__()
   </a>
   
@@ -465,7 +480,7 @@
 <div class="doc doc-object doc-class">
 
 
-<a id="src.rfsc.RFSC_base"></a>
+<a id="src.drfsc.rfsc.RFSC_base"></a>
   <div class="doc doc-contents first">
 
   
@@ -489,8 +504,8 @@
 
 
 
-<h2 id="src.rfsc.RFSC_base.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_models</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">tuning</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">rip_cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">upweight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+<h2 id="src.drfsc.rfsc.RFSC_base.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_models</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">tuning</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">rip_cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -587,16 +602,6 @@
           <td><p>Provides extra information. Defaults is False.</p></td>
           <td>
                 <code>False</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>upweight</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Upweights initial feature rips. Default is 1.</p></td>
-          <td>
-                <code>1</code>
           </td>
         </tr>
     </tbody>
