@@ -1,14 +1,12 @@
 import numpy as np
 import statsmodels.discrete.discrete_model as sm
-from scipy.stats import norm
-from src.utils import model_score
+from typing import Union
 import warnings
 from statsmodels.tools.sm_exceptions import ConvergenceWarning, HessianInversionWarning
 warnings.simplefilter('ignore', ConvergenceWarning)
 warnings.simplefilter('ignore', RuntimeWarning)
 warnings.simplefilter('ignore', HessianInversionWarning)
-from typing import Union
-# import random
+from src.drfsc.utils import model_score
 
 class RFSC_base:
     """
@@ -23,8 +21,7 @@ class RFSC_base:
             alpha: float=0.99, 
             rip_cutoff: float=1, 
             metric: str='roc_auc', 
-            verbose: bool=False, 
-            upweight: float=1, 
+            verbose: bool=False,
         ):
         """
         Parameters
@@ -45,8 +42,6 @@ class RFSC_base:
             Optimization metric. Default='roc_auc'. Options: 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'.
         verbose : bool 
             Provides extra information. Defaults is False.
-        upweight : float 
-            Upweights initial feature rips. Default is 1.
         """
         
         self.n_models = n_models
@@ -57,11 +52,7 @@ class RFSC_base:
         self.rip_cutoff = rip_cutoff
         self.metric = metric
         self.verbose = verbose
-        self.upweight= upweight
-        
-        # self.max_features = max_features
-        # self.enforce_max = False
-        
+
         if self.metric not in ['acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc']:
             raise ValueError(f"metric must be one of 'acc', 'roc_auc', 'weighted', 'avg_prec', 'f1', 'auprc'. Received: {self.metric} ")
         if not isinstance(self.n_models, int):
@@ -134,8 +125,9 @@ class RFSC(RFSC_base):
             Y_val: np.ndarray, 
             feature_partition: list=None, 
             sample_partition: list=None, 
-            drfsc_index: tuple=None, 
-            M=None
+            drfsc_index: tuple=None,
+            mu_init: dict=None,
+            M: dict=None,
         ) -> None:
         """
         Loads the data passed from DRFSC into the RFSC object.
@@ -154,12 +146,14 @@ class RFSC(RFSC_base):
             list of features indices for corresponding drfsc index
         sample_partition : list
             list of sample indices for corresponding drfsc index
-        drfsc_index : tupl
+        drfsc_index : tuple
             index of DRFSC bin of the form (r,i,j), where r is the drfsc iteration number, i is the vertical partition index, and j is the horizontal partition index
+        mu_init : dict
+            dictionary containing user-assigned RIPs. If None, RIPs are initialised to 1/n_features.
         M : dict
             dictionary containing relevant previous information for feature sharing
         """
-        
+
         if drfsc_index:
             self.drfsc_index = drfsc_index
             feature_share = join_features(
@@ -171,12 +165,23 @@ class RFSC(RFSC_base):
             self.X_val = X_val[:, self.features_passed]
             self.Y_train = Y_train[sample_partition]
             self.Y_val = Y_val
+            
+            _, n_features  = np.shape(self.X_train)
+            self.mu_0 = (1/n_features) * np.ones((n_features))
+            if mu_init is not None:
+                for idx, feature in enumerate(self.features_passed):
+                    if feature in mu_init.keys():
+                        self.mu_0[idx] = mu_init[feature]
 
         else:
             self.X_train = X_train
             self.X_val = X_val
             self.Y_train = Y_train
             self.Y_val = Y_val
+            
+            _, n_features  = np.shape(self.X_train)
+            self.mu_0 = (1/n_features) * np.ones((n_features))
+
     
     def rfsc_main(
             self, 
@@ -204,13 +209,13 @@ class RFSC(RFSC_base):
 
         """
         # initialization
+        self.perf_check = 0
         self.rnd_feats = {}
         self.sig_feats = {}        
         avg_model_size = np.empty((0,))
         avg_performance = np.empty((0,))
-        _, n_features  = np.shape(X_train)
-        mu = (1/n_features) * np.ones((n_features))
-        mu = mu * self.upweight
+        mu = self.mu_0
+        
         for t in range(self.n_iters):
             mask, performance_vector, size_vector = self.generate_models(
                                                             X_train=X_train,
@@ -226,24 +231,37 @@ class RFSC(RFSC_base):
                             mu=mu
                         )
             
-            avg_performance = np.append(avg_performance, np.mean(performance_vector.ravel()[np.flatnonzero(performance_vector)]))
             avg_model_size = np.append(avg_model_size, np.mean(size_vector.ravel()[np.flatnonzero(performance_vector)]))
+            avg_performance = np.append(avg_performance, np.mean(performance_vector.ravel()[np.flatnonzero(performance_vector)]))
+            
+            if perf_check(t, avg_performance, self.tol):
+                self.perf_check += 1
+            else:
+                self.perf_check = 0
+                
             if drfsc_index is None:
                 print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {np.abs(mu_update - mu).max():.5f}") if self.verbose else None
             else:
-                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {max(np.abs(mu_update - mu)):.5f},") if self.verbose else None
+                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]} max diff is: {max(np.abs(mu_update - mu)):.5f},") if self.verbose else None
+
 
             if tol_check(mu_update, mu, self.tol): # stop if tolerance is reached.
                 print(f"Tol reached. Number of features above rip_cutoff is {np.count_nonzero(mu_update>=self.rip_cutoff)}")
                 break   
             
-            if avg_performance[t] > 0.99: # stop if the average performance is greater than 0.99.
+            elif self.perf_check >= 2:
+                perf_break = True
                 break
             
             mu = mu_update
             
         self.iters = t
-        self.features_ = select_model(mu=mu, rip_cutoff=self.rip_cutoff)
+        if perf_break is True:
+            sig_sorted = {k: v for k, v in sorted(self.sig_feats.items(), key=lambda item: item[1], reverse=True)}
+            self.features_ = list(sig_sorted.keys())[0]
+        else:
+            self.features_ = select_model(mu=mu, rip_cutoff=self.rip_cutoff)
+
         self.model = sm.Logit(
                         Y_train, 
                         X_train[:, self.features_]
@@ -297,9 +315,8 @@ class RFSC(RFSC_base):
             mask_vector = np.zeros((len(mu),))
             while True:
                 generated_features = generate_model(mu) # generate model
-                # if self.enforce_max is True and len(generated_features) > self.max_features:
-                #     generated_features = random.sample(generated_features, self.max_features)
-                    
+                
+                
                 if tuple(generated_features) not in self.rnd_feats.keys(): # check if model has been generated before
                     logreg_init = sm.Logit(
                                         Y_train, 
@@ -408,6 +425,30 @@ class RFSC(RFSC_base):
         """
         for attr in ['X_train', 'X_val', 'Y_train', 'Y_val', 'rnd_feats', 'sig_feats']:
             if hasattr(self, attr): delattr(self, attr)
+            
+def perf_check(iter: int, avg_perf: np.ndarray, tol: float) -> bool:
+    """
+    Checks if performance has converged based on tolerance threshold.
+
+    Parameters
+    ----------
+    iter : int
+        current iteration
+    avg_perf : np.ndarray
+        average performance vector
+    tol : float
+        tolerance condition
+
+    Returns
+    -------
+    (bool): 
+        True if performance converged, else False.
+    """
+    if iter > 2 and np.abs(avg_perf[iter] - avg_perf[iter-1]) <= tol:
+        return True
+    else:
+        return False
+
             
 def tol_check(mu_update: np.ndarray, mu: np.ndarray, tol: float):
     """

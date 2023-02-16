@@ -1,6 +1,6 @@
 # Documentation for `RFSC_base`
 
-::: src.rfsc.RFSC_base
+::: src.drfsc.rfsc.RFSC_base
     handler: python
     selection:
         members:

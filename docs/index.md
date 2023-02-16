@@ -16,7 +16,7 @@ An open-source library for a distributed randomised feature selection and classi
 
 ## Overview
 
-`drfsc` is an open-source Python implementation of the Distributed Randomised Feature Selection algorithm for Classification problems (D-RFSC) [2]. Beside addressing some of the shortcomings of the conventional FS method, its good performance has previously been shown on a range of benchmark datasets. However, to date no Python implementation is available. `drfsc` offers an easy to use, parallelized probabilistic population-based feature selection scheme that is flexible and can be adapted to a wide range of binary classification problems and is particularly useful for large data problems where model interpretability and model explainability is of high importance. It provides modules for model fitting, evaluation, and visualization. Tutorial notebooks are provided to demonstrate the use of the package.
+`drfsc` is an open-source Python implementation of the Distributed Randomised Feature Selection algorithm for Classification problems (D-RFSC) [2]. Beside addressing some of the shortcomings of the conventional FS method, its good performance has previously been shown on a range of benchmark datasets. However, to date no Python implementation is available. `drfsc` offers an easy to use, parallelized probabilistic population-based feature selection scheme that is flexible and can be adapted to a wide range of binary classification problems and is particularly useful for large data problems where model interpretability and model explainability is of high importance. It also allows for the specification of user-defined values of initial inclusion probabilities, hence incorporating expert domain knowledge. It provides modules for model fitting, evaluation, and visualization. Tutorial notebooks are provided to demonstrate the use of the package.
 
 ## Installation
 
@@ -37,7 +37,6 @@ We invite anyone interested to use and modify this code under a MIT license.
 `drfsc` depends on the following packages:
 
 - [numpy](https://numpy.org/)
-- [scipy](https://www.scipy.org/)
 - [pandas](https://pandas.pydata.org/)
 - [matplotlib](https://matplotlib.org/)
 - [scikit-learn](https://scikit-learn.org/stable/)

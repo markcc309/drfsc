@@ -4,9 +4,10 @@ import pandas as pd
 import itertools
 import matplotlib.pyplot as plt
 import statsmodels.discrete.discrete_model as sm
-from src.utils import *
-from src.rfsc import RFSC, RFSC_base
 from typing import Union, Tuple
+from src.drfsc.utils import *
+from src.drfsc.rfsc import RFSC, RFSC_base
+
 
 class DRFSC:
     """
@@ -63,7 +64,7 @@ class DRFSC:
             n_hbins=n_hbins, 
             n_vbins=n_vbins, 
             output=output, 
-            feature_sharing=feature_sharing, 
+            feature_sharing=feature_sharing,
             k=k
         )
             
@@ -79,7 +80,7 @@ class DRFSC:
         self.polynomial = polynomial
         self.preprocess = preprocess
         self.loaded_data = 0
-        self.max_processes = max_processes if max_processes is not None else mp.cpu_count()
+        self.max_processes = max(max_processes, mp.cpu_count()) if max_processes is not None else mp.cpu_count()
         self.RFSC_model = RFSC_base(metric = self.metric)
         
         print(f"{self.__class__.__name__} Initialised with parameters: \n \
@@ -112,6 +113,66 @@ class DRFSC:
             self.RFSC_model.__setattr__(key, value)
         print(f"Updated RFSC model parameters: {self.RFSC_model.__dict__}")
         
+    def set_initial_mu(self, mu_init: Union[dict, float], _type: str='name') -> None:
+        """
+        Setter for initial mu values for RFSC. 
+        
+        If ``type(mu_init) == float``, will set all mu values to that float. 
+        
+        If ``type(mu_init) == dict``, will set the mu values for the given features to the given values. 
+        
+        If dict is passed, ``_type`` must be set to 'name' or 'index'. If 'name', the keys of the dictionary must be the names of the features. If 'index', the keys of the dictionary must be the indices of the features.
+
+        Parameters
+        ----------
+        mu_init : Union[dict, float] 
+            Initial mu values for RFSC. Can be a dictionary or float.
+            
+        _type : str, optional
+            _Only required if type(mu_init) == dict_. Type of keys in mu_init. 
+        """
+        if not isinstance(mu_init, (dict, float)):
+            raise TypeError(f"mu_init must be a dictionary or float. Received type: {type(mu_init)}.")
+        
+        if self.input_feature_names is None:
+            feat_names = np.arange(self.data.shape[1])
+        else:
+            feat_names = self.input_feature_names
+        
+        if isinstance(mu_init, float):
+            if mu_init < 0 or mu_init > 1:
+                raise ValueError(f"mu_init must be between 0 and 1. Value '{mu_init}' is invalid.")
+            self.mu_init = pd.Series(data=mu_init, index=feat_names).to_dict()
+            self.mu_init_num = pd.Series(data=mu_init, index=range(len(feat_names))).to_dict()
+            return
+        
+        if _type not in ['name', 'index']:
+            raise ValueError(f"Invalid _type '{_type}' for {type(mu_init)}. _type must be 'name' or 'index'.")
+        
+        self.mu_init = pd.Series(data=0, index=feat_names).to_dict()
+        self.mu_init_num = pd.Series(data=0, index=range(len(feat_names))).to_dict()
+        
+        if any(value < 0 or value > 1 for value in mu_init.values()):
+            raise ValueError(f"all initial mu value's must be between 0 and 1.")
+        
+        if _type == 'name':
+            for idx, key in enumerate(self.mu_init.keys()):
+                if key in mu_init.keys():
+                    if mu_init[key] == 0:
+                        continue
+                    self.mu_init[key] = mu_init[key]
+                    self.mu_init_num[idx] = mu_init[key]
+
+        else:
+            for idx, key in enumerate(self.mu_init_num.keys()):
+                if key in mu_init.keys():
+                    if mu_init[key] == 0:
+                        continue
+                    self.mu_init_num[key] = mu_init[key]
+                    
+        self.mu_init_num = {k: v for k, v in self.mu_init_num.items() if v != 0}
+        self.mu_init = {feat_names[k]: v for k, v in self.mu_init_num.items()}            
+
     def generate_processes(self, r: int, v_bins: int, h_bins: list) -> dict:
         return {(r,i,j): RFSC() for i in range(v_bins) for j in h_bins}
     
@@ -199,6 +260,9 @@ class DRFSC:
             
         Y_test = Y_test.flatten() if Y_test.ndim != 1 else Y_test
         
+        self.mu_init = None
+        self.mu_init_num = None
+        
         validate_data(
             X_train=X_train, 
             X_val=X_val, 
@@ -219,6 +283,11 @@ class DRFSC:
             Y_val=Y_val
         )
         return X_train, X_val, Y_train, Y_val, X_test, Y_test
+    
+    def view_data(self):
+        if self.loaded_data != 1:
+            raise ValueError("Data has not been loaded yet. Run DRFSC.load_data() first.")
+        return pd.DataFrame(self.data, columns=self.input_feature_names if self.input_feature_names is not None else np.arange(self.data.shape[1]))
     
     def fit(
             self, 
@@ -303,9 +372,10 @@ class DRFSC:
                                     X_val=X_val, 
                                     Y_train=Y_train, 
                                     Y_val=Y_val, 
-                                    feature_partition=distributed_features[:,i], 
-                                    sample_partition=distributed_samples[:,j], 
-                                    drfsc_index=key, 
+                                    feature_partition=list(distributed_features[:,i]), 
+                                    sample_partition=list(distributed_samples[:,j]), 
+                                    drfsc_index=key,
+                                    mu_init=self.mu_init_num,
                                     M=M
                                 )
             result_obj = [] 
@@ -320,6 +390,8 @@ class DRFSC:
                         args=(subprocesses[(r,i,j)], (r,i,j)), 
                         callback=store_results
                     )
+                # value = result.get()
+                # print(value)
             pool.close() # close the pool to new tasks
             pool.join()
         
@@ -557,7 +629,6 @@ class DRFSC:
         ensemble_proba['mean_prob'] = ensemble_proba.mean(axis=1)
         ensemble_proba['majority'] = [round(x) for x in ensemble_proba['mean_prob']]
     
-        self.ensemble_pred = ensemble_proba
         return ensemble, ensemble_proba
 
     def update_full_results(
@@ -659,7 +730,7 @@ class DRFSC:
         if self.output != 'ensemble':
             raise ValueError("Final model only valid for ensemble output")
         
-        if self.input_feature_names:
+        if self.input_feature_names is not None:
             idx = self.input_feature_names
         else:
             idx = range(self.data.shape[1])

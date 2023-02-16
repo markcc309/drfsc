@@ -1,6 +1,6 @@
 # Documentation for `RFSC`
 
-::: src.rfsc.RFSC
+::: src.drfsc.rfsc.RFSC
     handler: python
     selection:
         members:
@@ -12,16 +12,16 @@
         - generate_models
         - update_feature_probability
 **tol_check**
-::: src.rfsc.tol_check
+::: src.drfsc.rfsc.tol_check
     handler: python
     selection:
         members:
         - tol_check
 **select_model**
-::: src.rfsc.select_model
+::: src.drfsc.rfsc.select_model
 **gamma_update**
-::: src.rfsc.gamma_update
+::: src.drfsc.rfsc.gamma_update
 **generate_model**
-::: src.rfsc.generate_model
+::: src.drfsc.rfsc.generate_model
 **prune_model**
-::: src.rfsc.prune_model
+::: src.drfsc.rfsc.prune_model

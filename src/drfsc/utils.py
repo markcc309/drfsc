@@ -9,84 +9,90 @@ from typing import Union
 # helper functions for DRFSC
 def create_balanced_distributions(labels: np.ndarray, n_feats: int, n_vbins: int, n_hbins: int):
     """
-    Combines outputs from vertical_distribution and balanced_horizontal_partition to create class-balanced vertical and horizontal partitions for the dataset.
+    Combines outputs from feature_distribution and balanced_sample_partition to create class-balanced feature and sample partitions for the dataset.
     """ 
-    return vertical_distribution(n_feats=n_feats,n_vbins=n_vbins
+    return feature_distribution(n_feats=n_feats,n_vbins=n_vbins
             ), \
-        balanced_horizontal_partition(labels=labels, n_hbins=n_hbins
+        balanced_sample_partition(labels=labels, n_hbins=n_hbins
             )
 
-def balanced_horizontal_partition(labels: np.ndarray, n_hbins: int) -> np.ndarray:
+def balanced_sample_partition(labels: np.ndarray, n_hbins: int) -> np.ndarray:
     """
-    Creates class-balanced horizontal partitions for the dataset.
+    Creates class-balanced sample partitions for the dataset.
     
     Parameters
     ----------
     labels : np.ndarray 
         data labels.
     n_hbins : int
-        number of horizontal partiions of the data.
+        number of sample partiions of the data.
     
     Returns
     -------
-    horizontal_partitions : np.ndarray
-        Class balanced version of horizontal_distribution.
+    sample_partitions : np.ndarray
+        Class balanced version of sample_distribution.
     """
     index_by_label = {
         l: np.where(labels == l)[0] for l in np.unique(labels)
     }
-    
+
     index_by_label_split = {
-        key: horizontal_distribution(n_samples=len(value), n_hbins=n_hbins) for key, value in index_by_label.items()
+        key: sample_distribution(n_samples=None, n_hbins=n_hbins, sample=value) for key, value in index_by_label.items()
     }
 
     _partitions = []
     for i in range(n_hbins):
-        comined_sample = np.concatenate(([index_by_label_split[key][:, i] for key in index_by_label_split.keys()]), axis=0)
-        _partitions.append(random.sample(list(comined_sample), len(comined_sample)))
-    
+        combined_sample = np.concatenate(([index_by_label_split[key][:, i] for key in index_by_label_split.keys()]), axis=0)
+        _partitions.append(random.sample(list(combined_sample), len(combined_sample)))
+
     return np.transpose(np.array(_partitions))
 
-def horizontal_distribution(n_samples: int, n_hbins: int) -> np.ndarray:
+def sample_distribution(n_samples: int, n_hbins: int, sample: np.ndarray=None) -> np.ndarray:
     """
-    Creates horizontal bins for the dataset.
+    Creates sample bins for the dataset.
     
     Parameters
     ----------
     n_samples : int
         number of samples in the data.
     n_hbins : int
-        number of horizontal partiions of the data.
+        number of sample partiions of the data.
+    sample : np.ndarray, optional
+        if sample is not None, then the sample indexes are taken from sample, otherwise they are generated from np.arange(n_samples). sample argument required for creating balanced sample partitions.
     
     Returns
     -------
-    horizontal_partitions : np.ndarray 
-        Contains in each column the sample indexes of the samples that belong to that horizontal bin.
+    sample_partitions : np.ndarray 
+        Contains in each column the sample indexes of the samples that belong to that sample bin.
     """
-    sample_index = np.arange(n_samples).tolist()# list of feature ids
+    if sample is None:
+        sample_index = np.arange(n_samples).tolist()# list of sample ids
+    else:
+        sample_index = sample.tolist()
+        n_samples = len(sample_index)
     rnd_list = random.sample(sample_index, len(sample_index)) # random shuffle of feature ids
     
     _dups = (n_hbins - (len(rnd_list) % n_hbins)) if (n_samples % n_hbins != 0) else 0 # number of duplicates to add
 
     _comb = rnd_list + random.sample(sample_index, _dups)
-    horizontal_partitions = np.reshape(_comb, (int(len(_comb) / n_hbins), n_hbins)) # convert reshuffled features into matrix of dim [int(len(_comb) / n_hbins)x n_bins]
-    return horizontal_partitions
+    sample_partitions = np.reshape(_comb, (int(len(_comb) / n_hbins), n_hbins)) # convert reshuffled features into matrix of dim [int(len(_comb) / n_hbins)x n_bins]
+    return sample_partitions
 
-def vertical_distribution(n_feats: int, n_vbins: int) -> np.ndarray:
+def feature_distribution(n_feats: int, n_vbins: int) -> np.ndarray:
     """
-    Function that creates vertical bins for the features in the dataset for use by DRFSC.
+    Function that creates feature bins for the features in the dataset for use by DRFSC.
     
     Parameters
     ----------
     n_feats : int 
         number of features in the data
     n_vbins : int
-        number of vertical partitions of the data.
+        number of feature partitions of the data.
     
     Returns
     -------
-    vertical_partitions : np.ndarray 
-        Contains in each column the features that belong to that vertical bin
+    feature_partitions : np.ndarray 
+        Contains in each column the features that belong to that feature bin
     """
 
     feature_index = np.arange(1, n_feats).tolist() # list of feature ids
@@ -96,8 +102,8 @@ def vertical_distribution(n_feats: int, n_vbins: int) -> np.ndarray:
     
     _comb = rnd_list + random.sample(feature_index, _dups)
     rnd_mat = np.reshape(_comb, (int(len(_comb) / n_vbins), n_vbins)) # convert reshuffled features into matrix of dim [(int(len(_comb) / n_vbins) x n_vbins]
-    vertical_partitions = np.vstack((np.zeros((n_vbins,)), rnd_mat))
-    return vertical_partitions
+    feature_partitions = np.vstack((np.zeros((n_vbins,)), rnd_mat))
+    return feature_partitions
 
 
 def scale_data(data: Union[np.ndarray, pd.DataFrame]) -> Union[np.ndarray, pd.DataFrame]:
@@ -354,19 +360,14 @@ def data_info(X_train=None, X_val=None, X_test=None, Y_train=None, Y_val=None, Y
     Prints some information about the loaded data.
     """
     print("Information for Loaded Data: \n -------------")
-    print(f"'X_train' SHAPE: {X_train.shape}") if X_train is not None else None
-    print(f"          TYPE:  {type(X_train).__name__}") if X_train is not None else None
-    print(f"'X_val'   SHAPE: {X_val.shape}") if X_val is not None else None
-    print(f"          TYPE:  {type(X_val).__name__}") if X_val is not None else None
-    print(f"'X_test'  SHAPE: {X_test.shape}") if X_test is not None else None
-    print(f"          TYPE:  {type(X_test).__name__}") if X_test is not None else None
+    print(f"'X_train' SHAPE: {X_train.shape}, TYPE: {type(X_train).__name__}") if X_train is not None else None
+    print(f"'X_val'   SHAPE: {X_val.shape}, TYPE: {type(X_val).__name__}") if X_val is not None else None
+    print(f"'X_test'  SHAPE: {X_test.shape}, TYPE: {type(X_test).__name__}") if X_test is not None else None
     
-    print(f"'Y_train' SHAPE: {Y_train.shape}") if Y_train is not None else None
-    print(f"          TYPE:  {type(Y_train).__name__}") if Y_train is not None else None
-    print(f"'Y_val'   SHAPE: {Y_val.shape}") if Y_val is not None else None
-    print(f"          TYPE:  {type(Y_val).__name__}") if Y_val is not None else None
-    print(f"'Y_test'  SHAPE: {Y_test.shape}") if Y_test is not None else None
-    print(f"          TYPE:  {type(Y_test).__name__} \n -------------") if Y_test is not None else None
+    print(f"'Y_train' SHAPE: {Y_train.shape}, TYPE: {type(Y_train).__name__}") if Y_train is not None else None
+    print(f"'Y_val'   SHAPE: {Y_val.shape}, TYPE: {type(Y_val).__name__}") if Y_val is not None else None
+    print(f"'Y_test'  SHAPE: {Y_test.shape}, TYPE: {type(Y_test).__name__}") if Y_test is not None else None
+    print("-------------")
 
 def get_corr_df(X, level=0.8):
     '''
@@ -385,3 +386,16 @@ def get_corr_df(X, level=0.8):
         counts.append((len(np.where(highCorr_idx[0]==cnt)[0])+len(np.where(highCorr_idx[1]==cnt)[0]))/2)
 
     return pd.DataFrame(counts,X.columns,columns=['Count'])
+
+def load_wdbc(path):
+    '''
+    Takes given WDBC file and returns the data in a numpy array
+    '''
+    with open(path, "rb") as fo:
+        data = np.loadtxt(
+            fo, 
+            delimiter = ",", 
+            skiprows = 0, 
+            converters = {1: lambda x: 1 if x.decode("utf-8") == "M" else 0}
+        )
+    return data

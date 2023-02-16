@@ -2,6 +2,7 @@ site_name: drfsc for distributed Feature Selection
 edit_uri: 'blob/main/docs/'
 nav:
   - Home: index.md
+  - Changelog: changelog.md
   - 'Getting Started': 
     - fitting single models: notebooks/01_fitting_single.ipynb
     - fitting ensembles: notebooks/02_fitting_ensemble.ipynb
@@ -24,7 +25,7 @@ plugins:
             docstring_style: "numpy"
           setup_commands:
             - import sys
-            - sys.path.append("src")
+            - sys.path.append("src.drfsc")
           rendering:
             show_source: false
       custom_templates: templates

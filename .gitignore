@@ -1,2 +1,9 @@
 site/*
 test.py
+tests/*.pkl
+setup.py
+excl
+.pypirc
+src/drfsc.egg-info
+dist
+.pytest_cache

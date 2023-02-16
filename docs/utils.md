@@ -1,20 +1,20 @@
 # Documentation for `utils.py`
 
 **create_balanced_distributions**
-::: src.utils.create_balanced_distributions
-**balanced_horizontal_partition**
-::: src.utils.balanced_horizontal_partition
-**horizontal_distribution**
-::: src.utils.horizontal_distribution
-**vertical_distribution**
-::: src.utils.vertical_distribution
+::: src.drfsc.utils.create_balanced_distributions
+**balanced_sample_partition**
+::: src.drfsc.utils.balanced_sample_partition
+**sample_distribution**
+::: src.drfsc.utils.sample_distribution
+**feature_distribution**
+::: src.drfsc.utils.feature_distribution
 **scale_data**
-::: src.utils.scale_data
+::: src.drfsc.utils.scale_data
 **extend_features**
-::: src.utils.extend_features
+::: src.drfsc.utils.extend_features
 **evaluate_model**
-::: src.utils.evaluate_model
+::: src.drfsc.utils.evaluate_model
 **evaluate_interim_model**
-::: src.utils.evaluate_interim_model
+::: src.drfsc.utils.evaluate_interim_model
 **model_score**
-::: src.utils.model_score
+::: src.drfsc.utils.model_score
