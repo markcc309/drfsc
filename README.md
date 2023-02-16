@@ -32,7 +32,6 @@ We invite anyone interested to use and modify this code under a MIT license.
 `drfsc` depends on the following packages:
 
 - [numpy](https://numpy.org/)
-- [scipy](https://www.scipy.org/)
 - [pandas](https://pandas.pydata.org/)
 - [matplotlib](https://matplotlib.org/)
 - [scikit-learn](https://scikit-learn.org/stable/)
