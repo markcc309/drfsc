@@ -655,7 +655,7 @@ class DRFSC:
         # get the best model for each horizontal partition   
         ensemble_proba = pd.DataFrame()
         for k, v in self.ensemble.items():
-            features, model = v
+            features, _, model = v
             ensemble_proba[k] = model.predict(X_test[:, features])
         # for h_bin in range(self.n_hbins):
         #     model = sm.Logit(
