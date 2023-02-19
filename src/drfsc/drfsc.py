@@ -5,8 +5,8 @@ import itertools
 import matplotlib.pyplot as plt
 import statsmodels.discrete.discrete_model as sm
 from typing import Union, Tuple
-from src.drfsc.utils import *
-from src.drfsc.rfsc import RFSC, RFSC_base
+from .utils import *
+from .rfsc import RFSC, RFSC_base
 
 
 class DRFSC:
@@ -81,7 +81,7 @@ class DRFSC:
         self.preprocess = preprocess
         self.loaded_data = 0
         self.max_processes = max(max_processes, mp.cpu_count()) if max_processes is not None else mp.cpu_count()
-        self.RFSC_model = RFSC_base(metric = self.metric)
+        self.RFSC_model = RFSC_base(metric = self.metric, verbose=self.verbose)
         
         print(f"{self.__class__.__name__} Initialised with parameters: \n \
             n_vbins = {n_vbins}, \n \
@@ -390,20 +390,12 @@ class DRFSC:
                         args=(subprocesses[(r,i,j)], (r,i,j)), 
                         callback=store_results
                     )
-                # value = result.get()
-                # print(value)
             pool.close() # close the pool to new tasks
             pool.join()
         
             if len(result_obj) != (self.n_vbins * len(non_converged_hbins)):
-                print(f"result_obj length is {len(result_obj)}. Should be {(self.n_vbins * len(non_converged_hbins))}")
-                for result in result_obj:
-                    print(result.__dict__)
-            
-            
-            for i,j in itertools.product(range(self.n_vbins), non_converged_hbins):
-                if (r,i,j) not in [x.drfsc_index for x in result_obj]:
-                    print(f"missing result {(r,i,j)}")
+                print(f"result_obj length is {len(result_obj)}. Should be {(self.n_vbins * len(non_converged_hbins))}")           
+                                
             for result in result_obj:
                 # predict on all sub-processes
                 result.model, result.evaluation = evaluate_interim_model(
@@ -415,12 +407,18 @@ class DRFSC:
                                                     metric=self.metric
                                                 ) 
                 iter_results[result.drfsc_index] = result
-                
+
+                    
             # update full results dict
             self.results_full, single_iter_results = self.update_full_results(
                                                         results_full=self.results_full, 
                                                         iter_results=iter_results
                                                     ) 
+            for i,j in itertools.product(range(self.n_vbins), non_converged_hbins):
+                if (r,i,j) not in [x.drfsc_index for x in result_obj]:
+                    print(f"missing result {(r,i,j)}")
+                    iter_results.update({(r,i,j): [[0], 0,  self.output, [0]]})
+
             # map local feature indices to global feature indices
             single_iter_results = self.map_local_feats_to_gt(
                                     iter_results=single_iter_results, 
@@ -462,12 +460,7 @@ class DRFSC:
                 print(f"All horizontal partitions have converged. Final iter count: {r+1}")
                 break
             
-        if self.output == 'single':
-            self.features_num = select_single_model(J_best=self.J_best)[0]
-            self.model = sm.Logit(
-                    self.labels, 
-                    self.data[:, self.features_num]
-                ).fit(disp=False, method='lbfgs')
+        self.build_final_model(J_best=self.J_best)
             
         for value in self.results_full.values(): 
             # remove the features_passed from results_full
@@ -475,6 +468,48 @@ class DRFSC:
             
         return self
     
+    def build_final_model(self, J_best):
+        """
+        Builds the final model based on the output specified.
+
+        Parameters
+        ----------
+        output : str
+            Output type. Options: 'single', 'ensemble'
+        J_best : dict
+            Dictionary containing the best model for each horizontal partition.
+        """
+        
+        if self.output == 'ensemble':
+            ensemble = {}
+            for h_bin in range(self.n_hbins):
+                model = sm.Logit(
+                        self.labels, 
+                        self.data[:, J_best[h_bin][0]]
+                    ).fit(disp=False, method='lbfgs')
+                ensemble.update({f"model_h{str(h_bin)}" : [J_best[h_bin][0], model]})
+                
+            self.ensemble = self.map_feature_indices_to_names(output=self.output, final_model=ensemble)
+            self.final_model(self.ensemble)
+            self.features_num = self.model_features_num
+
+        else:
+            self.features_num = select_single_model(J_best=J_best)[0]
+            
+        if self.input_feature_names is not None:
+                self.features_ = self.map_feature_indices_to_names(
+                                        output='single', 
+                                        final_model=self.features_num
+                                    )
+        else:
+            self.features_ = self.features_num   
+        #self.features_ = self.map_feature_indices_to_names(output='single', final_model=self.features_num)
+        self.model = sm.Logit(
+            self.labels, 
+            self.data[:, self.features_num]
+        ).fit(disp=False, method='lbfgs')
+        self.coef_ = self.model.params
+
     def score(
         self,
         X_test: Union[np.ndarray, pd.DataFrame], 
@@ -531,15 +566,15 @@ class DRFSC:
             The predicted labels.
         """
         if self.output == 'ensemble':
-            model_ens, self.ensemble_pred = self.generate_ensemble(
+            self.ensemble_pred = self.generate_ensemble(
                                         X_test=X_test, 
                                         J_best=self.J_best, 
                                     )
-            self.model_ensemble = self.map_feature_indices_to_names(
-                                        output=self.output, 
-                                        final_model=model_ens
-                                    )
-            self.final_model(self.model_ensemble)
+            # self.model_ensemble = self.map_feature_indices_to_names(
+            #                             output=self.output, 
+            #                             final_model=model_ens
+            #                         )
+            # self.final_model(self.model_ensemble)
             ret = self.ensemble_pred['majority'].to_numpy()
             
         else: # output == 'single'
@@ -563,27 +598,27 @@ class DRFSC:
             The predicted probabilities.
         """
         if self.output == 'ensemble':
-            model_ens, self.ensemble_pred = self.generate_ensemble(
+            self.ensemble_pred = self.generate_ensemble(
                             X_test=X_test, 
                             J_best=self.J_best, 
                         )
-            self.model_ensemble = self.map_feature_indices_to_names(
-                                        output=self.output, 
-                                        final_model=model_ens
-                                    )
-            self.final_model(self.model_ensemble)
+            # self.model_ensemble = self.map_feature_indices_to_names(
+            #                             output=self.output, 
+            #                             final_model=self.ensemble
+            #                         )
+            # self.final_model(self.model_ensemble)
             proba_ = self.ensemble_pred['mean_prob'].to_numpy()
             
         else: #self.output == 'single'
-            self.coef_ = self.model.params
+            # self.coef_ = self.model.params
             self.label_pred = self.model.predict(X_test[:, self.features_num])
-            if self.input_feature_names is not None:
-                self.features_ = self.map_feature_indices_to_names(
-                                        output=self.output, 
-                                        final_model=self.features_num
-                                    )
-            else:
-                self.features_ = self.features_num
+            # if self.input_feature_names is not None:
+            #     self.features_ = self.map_feature_indices_to_names(
+            #                             output=self.output, 
+            #                             final_model=self.features_num
+            #                         )
+            # else:
+            #     self.features_ = self.features_num
             
             proba_ = self.label_pred
             
@@ -615,21 +650,25 @@ class DRFSC:
         if not all(isinstance(x, np.ndarray) for x in [self.data, X_test, self.labels]):
             raise TypeError("All inputs must have type np.ndarray")
 
+        if not hasattr(self, 'ensemble'):
+            raise AttributeError("No ensemble has been generated yet. Please run the .fit method first.")
         # get the best model for each horizontal partition   
-        ensemble = {}
         ensemble_proba = pd.DataFrame()
-        for h_bin in range(self.n_hbins):
-            model = sm.Logit(
-                    self.labels, 
-                    self.data[:, J_best[h_bin][0]]
-                ).fit(disp=False, method='lbfgs')
-            ensemble.update({f"model_h{str(h_bin)}" : [J_best[h_bin][0], model]})
-            ensemble_proba[f"model_h{str(h_bin)}"] = model.predict(X_test[:, J_best[h_bin][0]])
+        for k, v in self.ensemble.items():
+            features, model = v
+            ensemble_proba[k] = model.predict(X_test[:, features])
+        # for h_bin in range(self.n_hbins):
+        #     model = sm.Logit(
+        #             self.labels, 
+        #             self.data[:, J_best[h_bin][0]]
+        #         ).fit(disp=False, method='lbfgs')
+        #     ensemble.update({f"model_h{str(h_bin)}" : [J_best[h_bin][0], model]})
+        #     ensemble_proba[f"model_h{str(h_bin)}"] = model.predict(X_test[:, J_best[h_bin][0]])
             
         ensemble_proba['mean_prob'] = ensemble_proba.mean(axis=1)
         ensemble_proba['majority'] = [round(x) for x in ensemble_proba['mean_prob']]
     
-        return ensemble, ensemble_proba
+        return ensemble_proba
 
     def update_full_results(
             self, 
@@ -661,10 +700,10 @@ class DRFSC:
                 dict updated with global feature indices.
         """
         for i,j in itertools.product(range(self.n_vbins), hbins):
-            if (r,i,j) in iter_results.keys():
-                iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
-            else:
-                iter_results[(r,i,j)][0] = [0]
+            # if (r,i,j) in iter_results.keys():
+            iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
+            # else:
+            #     iter_results.update({(r,i,j): [[0], 0,  self.output, [0]]})
     
         return iter_results
             
@@ -721,10 +760,6 @@ class DRFSC:
         ----------
         model_ensemble : dict
             contains the ensemble of models. Each key is a separate model, and the value is a list containing a list of the feature indices used for that model, the mapped feature names, and the model object itself.
-        
-        Returns
-        -------
-        : None
         """
 
         if self.output != 'ensemble':
@@ -887,12 +922,14 @@ class DRFSC:
         figure : matplotlib.pyplot.figure
             output figure
         """
-        if self.output == 'ensemble':
-            features_num = self.model_features_num
-            coef = self.model_coef
-        else:
-            features_num = self.features_num
-            coef = self.coef_
+        features_num = self.features_num
+        coef = self.coef_
+        # if self.output == 'ensemble':
+        #     features_num = self.model_features_num
+        #     coef = self.model_coef
+        # else:
+        #     features_num = self.features_num
+        #     coef = self.coef_
     
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
@@ -941,14 +978,18 @@ class DRFSC:
         figure : matplotlib.pyplot.figure
             output figure
         """
-        if self.output == 'ensemble':
-            feat_num = self.model_features_num
-            coef = self.model_coef
-            feat_text = self.model_features_name
-        else:
-            feat_num = self.features_num
-            coef = self.coef_
-            feat_text = self.features_
+        # if self.output == 'ensemble':
+        #     feat_num = self.model_features_num
+        #     coef = self.model_coef
+        #     feat_text = self.model_features_name
+        # else:
+        #     feat_num = self.features_num
+        #     coef = self.coef_
+        #     feat_text = self.features_            
+            
+        feat_num = self.features_num
+        coef = self.coef_
+        feat_text = self.features_
             
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
@@ -1062,6 +1103,8 @@ def validate_model(
         raise TypeError(f"n_vbins must be an integer. Received {type(n_vbins)}")
     if output not in ['single', 'ensemble']:
         raise ValueError(f"output must be one of: ('single', 'ensemble'). Received {output}")
+    if n_hbins == 1 and output == 'ensemble':
+        raise ValueError(f"output must be 'single' if n_hbins is 1.")
     if feature_sharing not in ['all', 'latest', 'top_k']:
         raise ValueError(f"feature_sharing must be one of: ('all', 'latest', 'top_k'). Received {feature_sharing}")
     if feature_sharing == 'top_k':

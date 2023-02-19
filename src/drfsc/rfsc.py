@@ -6,7 +6,7 @@ from statsmodels.tools.sm_exceptions import ConvergenceWarning, HessianInversion
 warnings.simplefilter('ignore', ConvergenceWarning)
 warnings.simplefilter('ignore', RuntimeWarning)
 warnings.simplefilter('ignore', HessianInversionWarning)
-from src.drfsc.utils import model_score
+from .utils import model_score
 
 class RFSC_base:
     """
@@ -70,11 +70,12 @@ class RFSC_base:
         
         print(
             f"{self.__class__.__name__} Initialised with with parameters: \n \
-            n_models {n_models}, \n \
-            n_iters {n_iters}, \n \
-            tuning {tuning}, \n \
-            metric {metric}, \n \
-            alpha {alpha} \n ------------") if self.verbose else None
+            n_models = {n_models}, \n \
+            n_iters = {n_iters}, \n \
+            tuning = {tuning}, \n \
+            metric = {metric}, \n \
+            alpha = {alpha} \n ------------"
+        ) if self.verbose else None
         
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(n_models={self.n_models}, n_iters={self.n_iters}, tuning={self.tuning}, metric={self.metric}, alpha={self.alpha})"
@@ -240,9 +241,9 @@ class RFSC(RFSC_base):
                 self.perf_check = 0
                 
             if drfsc_index is None:
-                print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]:.3f} max diff is: {np.abs(mu_update - mu).max():.5f}") if self.verbose else None
+                print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, avg perf is: {avg_performance[t]:.3f}, tol not reached, max diff is: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
             else:
-                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, tol not reached, avg perf is: {avg_performance[t]} max diff is: {max(np.abs(mu_update - mu)):.5f},") if self.verbose else None
+                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, avg perf: {avg_performance[t]}, tol not reached, max diff: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
 
 
             if tol_check(mu_update, mu, self.tol): # stop if tolerance is reached.

@@ -7,3 +7,4 @@ excl
 src/drfsc.egg-info
 dist
 .pytest_cache
+testsAida.py
