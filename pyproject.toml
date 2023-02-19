@@ -2,9 +2,16 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = [
+    "drfsc",
+]
+
+
 [project]
 name = "drfsc"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Mark Chiu Chong", email="mark.chiuchong@gmail.com"},
 ]
@@ -18,19 +25,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
 ]
-include = ["tests/*"]
-
-[options]
-package_dir=
-    =src
-packages=find:
-
-[options.packages.find]
-where=src
-
-[project.urls]
-"Homepage" = "https://github.com/markcc309/drfsc"
-"Documentation" = "https://markcc309.github.io/drfsc/"
 
 dependencies = [
   "numpy==1.23.4",
@@ -40,11 +34,15 @@ dependencies = [
   "setuptools==65.5.0",
   "statsmodels==0.13.2",
   "toml==0.10.2",
-  "wheel==0.37.1"
+  "wheel==0.37.1",
+  "matplotlib==3.6.2",
 ]
+
+[project.urls]
+"Homepage" = "https://github.com/markcc309/drfsc"
+"Documentation" = "https://markcc309.github.io/drfsc/"
 
 [project.optional-dependencies]
 tests = [
-  'pytest == 7.1.2'; 
-  python_version >= "3.9.12"'
+  "pytest == 7.1.2"
 ]

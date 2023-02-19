@@ -6,3 +6,4 @@ setuptools==65.5.0
 statsmodels==0.13.2
 toml==0.10.2
 wheel==0.37.1
+matplotlib==3.6.2
