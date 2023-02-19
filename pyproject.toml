@@ -18,6 +18,15 @@ classifiers = [
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
 ]
+include = ["tests/*"]
+
+[options]
+package_dir=
+    =src
+packages=find:
+
+[options.packages.find]
+where=src
 
 [project.urls]
 "Homepage" = "https://github.com/markcc309/drfsc"
