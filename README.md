@@ -48,6 +48,7 @@ The package has been developed based on research that came out of the Polytechni
 ## Citations
 
 This package is developed in CSIRO’s Australian e-Health Research Centre. If you use `drfsc` package in your research we would appreciate a citation to the appropriate paper(s):
-  - For general use of `drfsc` package you can read/cite the original article 
-  - For information/use of the Randomised Feature Selection and classification concept you can read/cite original article [1].
-  - For information/use of the Distributed Feature Selection architecture with partial information you can read/cite original article [2].
+
+ - For general use of `drfsc` package you can read/cite the original article.
+ - For information/use of the Randomised Feature Selection and classification concept you can read/cite original article [1].
+ - For information/use of the Distributed Feature Selection architecture with partial information you can read/cite original article [2].
