@@ -19,10 +19,6 @@ The easiest way to install is from PyPI: just use
 
 `pip install drfsc`
 
-To install from source: clone this git repo, enter the directory, and run
-
-`python setup.py install`
-
 ## License
 
 We invite anyone interested to use and modify this code under a MIT license.
