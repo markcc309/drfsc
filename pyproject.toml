@@ -8,10 +8,9 @@ packages = [
     "drfsc",
 ]
 
-
 [project]
 name = "drfsc"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Mark Chiu Chong", email="mark.chiuchong@gmail.com"},
 ]
@@ -33,9 +32,9 @@ dependencies = [
   "scikit-learn==1.1.2",
   "setuptools==65.5.0",
   "statsmodels==0.13.2",
+  "matplotlib==3.6.2",
   "toml==0.10.2",
   "wheel==0.37.1",
-  "matplotlib==3.6.2",
 ]
 
 [project.urls]
