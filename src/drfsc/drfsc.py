@@ -8,7 +8,6 @@ from typing import Union, Tuple
 from .utils import *
 from .rfsc import RFSC, RFSC_base
 
-
 class DRFSC:
     """
         Distributed Randomised Feature Selection for Classification (DRFSC)
@@ -570,11 +569,6 @@ class DRFSC:
                                         X_test=X_test, 
                                         J_best=self.J_best, 
                                     )
-            # self.model_ensemble = self.map_feature_indices_to_names(
-            #                             output=self.output, 
-            #                             final_model=model_ens
-            #                         )
-            # self.final_model(self.model_ensemble)
             ret = self.ensemble_pred['majority'].to_numpy()
             
         else: # output == 'single'
@@ -602,24 +596,10 @@ class DRFSC:
                             X_test=X_test, 
                             J_best=self.J_best, 
                         )
-            # self.model_ensemble = self.map_feature_indices_to_names(
-            #                             output=self.output, 
-            #                             final_model=self.ensemble
-            #                         )
-            # self.final_model(self.model_ensemble)
             proba_ = self.ensemble_pred['mean_prob'].to_numpy()
             
         else: #self.output == 'single'
-            # self.coef_ = self.model.params
             self.label_pred = self.model.predict(X_test[:, self.features_num])
-            # if self.input_feature_names is not None:
-            #     self.features_ = self.map_feature_indices_to_names(
-            #                             output=self.output, 
-            #                             final_model=self.features_num
-            #                         )
-            # else:
-            #     self.features_ = self.features_num
-            
             proba_ = self.label_pred
             
         return proba_
@@ -657,13 +637,6 @@ class DRFSC:
         for k, v in self.ensemble.items():
             features, _, model = v
             ensemble_proba[k] = model.predict(X_test[:, features])
-        # for h_bin in range(self.n_hbins):
-        #     model = sm.Logit(
-        #             self.labels, 
-        #             self.data[:, J_best[h_bin][0]]
-        #         ).fit(disp=False, method='lbfgs')
-        #     ensemble.update({f"model_h{str(h_bin)}" : [J_best[h_bin][0], model]})
-        #     ensemble_proba[f"model_h{str(h_bin)}"] = model.predict(X_test[:, J_best[h_bin][0]])
             
         ensemble_proba['mean_prob'] = ensemble_proba.mean(axis=1)
         ensemble_proba['majority'] = [round(x) for x in ensemble_proba['mean_prob']]
@@ -873,9 +846,9 @@ class DRFSC:
                 cols = list(self.input_feature_names)
                 cols.insert(0, 'model_id')
                 coef = pd.DataFrame(0, columns=cols, index=range(0, self.n_hbins+1))
-                for id, key in enumerate(self.model_ensemble.keys()):
+                for id, key in enumerate(self.ensemble.keys()):
                     coef.loc[id, 'model_id'] = key
-                    coef.loc[id, self.model_ensemble[key][1]] = self.model_ensemble[key][2].params
+                    coef.loc[id, self.ensemble[key][1]] = self.ensemble[key][2].params
                 coef.loc['mean'] = coef.mean()
                 coef.loc['mean', 'model_id'] = 'mean'
                 coef_arr = coef.loc['mean'].to_numpy()
@@ -885,7 +858,7 @@ class DRFSC:
             
                 disp = dict(zip(self.input_feature_names[coef_idx], coef_arr[coef_idx]))
             except AttributeError:
-                raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
+                raise AttributeError("Model has not been fit yet. Run .predict() or .predict_proba() first")  
             
         else: #self.output == 'single':
             if self.input_feature_names is not None:
@@ -922,14 +895,6 @@ class DRFSC:
         figure : matplotlib.pyplot.figure
             output figure
         """
-        features_num = self.features_num
-        coef = self.coef_
-        # if self.output == 'ensemble':
-        #     features_num = self.model_features_num
-        #     coef = self.model_coef
-        # else:
-        #     features_num = self.features_num
-        #     coef = self.coef_
     
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
@@ -937,13 +902,13 @@ class DRFSC:
             if isinstance(X_test, pd.DataFrame):
                 X_test = X_test.to_numpy()
                 
-            sample_data =  X_test[data_index, features_num]
+            sample_data =  X_test[data_index, self.features_num]
 
         else:
-            sample_data = self.data[data_index, features_num]
+            sample_data = self.data[data_index, self.features_num]
 
         y_neg, y_pos = [], []
-        for idx, parameter_value in enumerate(coef):
+        for idx, parameter_value in enumerate(self.coef_):
             if parameter_value < 0:
                 y_neg.append(parameter_value * sample_data[idx])
             else:
@@ -977,19 +942,7 @@ class DRFSC:
         -------
         figure : matplotlib.pyplot.figure
             output figure
-        """
-        # if self.output == 'ensemble':
-        #     feat_num = self.model_features_num
-        #     coef = self.model_coef
-        #     feat_text = self.model_features_name
-        # else:
-        #     feat_num = self.features_num
-        #     coef = self.coef_
-        #     feat_text = self.features_            
-            
-        feat_num = self.features_num
-        coef = self.coef_
-        feat_text = self.features_
+        """     
             
         if X_test is not None:
             if not isinstance(X_test, (np.ndarray, pd.DataFrame)):
@@ -997,12 +950,15 @@ class DRFSC:
             if isinstance(X_test, pd.DataFrame):
                 X_test = X_test.to_numpy()
         
-            sample_data = X_test[data_index, feat_num]
+            sample_data = X_test[data_index, self.features_num]
         else:
-            sample_data = self.data[data_index, feat_num]
+            sample_data = self.data[data_index, self.features_num]
         
-        disp = dict(zip(feat_text, np.multiply(sample_data, coef)))
-        
+        try:
+            disp = dict(zip(self.features_, np.multiply(sample_data, self.coef_)))
+        except AttributeError:
+            disp = dict(zip(self.features_num, np.multiply(sample_data, self.coef_)))
+            
         plt.figure()
         plt.title(f"Single Prediction Plot for Sample {data_index}")
         plt.ylabel("Sample-weighted prediction")

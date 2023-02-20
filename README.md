@@ -1,7 +1,7 @@
 # drfsc
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<!-- [![PyPI version](add here)(url)] -->
+version: 0.0.5
 
 An open-source library for a distributed randomised feature selection and classification algorithm.
 
