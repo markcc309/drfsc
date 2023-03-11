@@ -8,3 +8,4 @@ src/drfsc.egg-info
 dist
 .pytest_cache
 testsAida.py
+/tests_aida

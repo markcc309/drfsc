@@ -345,6 +345,22 @@ class DRFSC:
             print(f"Number of Samples: {n_samples}. Horizontal Disitribution SHAPE: {np.shape(distributed_samples)}")
             print(f"Number of Features: {n_features}. Vertical Distribution SHAPE: {np.shape(distributed_features)}")
             
+            
+        if self.n_hbins == 1 and self.n_vbins == 1:
+            if self.output == 'ensemble':
+                print("WARNING: Ensemble output is not possible with n_hbins = 1 and n_vbins = 1. Setting output = 'single'")
+            self.output = 'single'
+
+            result = RFSC()
+            result.set_attr(self.RFSC_model.__dict__)
+            result.load_data_rfsc(X_train=X_train, X_val=X_val, Y_train=Y_train, Y_val=Y_val)
+            result.rfsc_main(X_train=X_train, X_val=X_val, Y_train=Y_train, Y_val=Y_val)
+            result.model, result.evaluation = evaluate_interim_model(result.features_, X_train, X_val, Y_train, Y_val, self.metric)
+            self.J_best = {0: [result.features_, result.evaluation, result.metric]}
+            self.build_final_model(J_best=self.J_best)
+            return self
+            
+            
         for r in range(self.n_runs):
             iter_results = {} # initialise dictionary for storing results
             
@@ -496,12 +512,12 @@ class DRFSC:
             self.features_num = select_single_model(J_best=J_best)[0]
             
         if self.input_feature_names is not None:
-                self.features_ = self.map_feature_indices_to_names(
-                                        output='single', 
-                                        final_model=self.features_num
-                                    )
+            self.features_ = self.map_feature_indices_to_names(
+                                    output='single', 
+                                    final_model=self.features_num
+                                )
         else:
-            self.features_ = self.features_num   
+            self.features_ = self.features_num
         #self.features_ = self.map_feature_indices_to_names(output='single', final_model=self.features_num)
         self.model = sm.Logit(
             self.labels, 
@@ -565,10 +581,7 @@ class DRFSC:
             The predicted labels.
         """
         if self.output == 'ensemble':
-            self.ensemble_pred = self.generate_ensemble(
-                                        X_test=X_test, 
-                                        J_best=self.J_best, 
-                                    )
+            self.ensemble_pred = self.generate_ensemble(X_test=X_test, )
             ret = self.ensemble_pred['majority'].to_numpy()
             
         else: # output == 'single'
@@ -592,23 +605,16 @@ class DRFSC:
             The predicted probabilities.
         """
         if self.output == 'ensemble':
-            self.ensemble_pred = self.generate_ensemble(
-                            X_test=X_test, 
-                            J_best=self.J_best, 
-                        )
+            self.ensemble_pred = self.generate_ensemble(X_test=X_test)
             proba_ = self.ensemble_pred['mean_prob'].to_numpy()
             
         else: #self.output == 'single'
-            self.label_pred = self.model.predict(X_test[:, self.features_num])
-            proba_ = self.label_pred
+            self.label_prob = self.model.predict(X_test[:, self.features_num])
+            proba_ = self.label_prob
             
         return proba_
         
-    def generate_ensemble(
-            self, 
-            X_test: np.ndarray, 
-            J_best: dict, 
-        ):
+    def generate_ensemble(self, X_test: np.ndarray):
         """
         Generates the model ensemble based on the best model for each horizontal partition.
 
@@ -616,8 +622,6 @@ class DRFSC:
         ----------
         X_test : np.ndarray 
             Test set data
-        J_best : dict
-            dictionary containing as keys the horizontal partition index and as values the best model for that partition (list) in terms of feature indices, performance evaluation (float), and metric used for evaluation (str)
 
         Returns
         -------
@@ -673,10 +677,7 @@ class DRFSC:
                 dict updated with global feature indices.
         """
         for i,j in itertools.product(range(self.n_vbins), hbins):
-            # if (r,i,j) in iter_results.keys():
             iter_results[(r,i,j)][0] = list(np.array(iter_results[(r,i,j)][3])[list(iter_results[(r,i,j)][0])])
-            # else:
-            #     iter_results.update({(r,i,j): [[0], 0,  self.output, [0]]})
     
         return iter_results
             
@@ -758,7 +759,7 @@ class DRFSC:
         df['mean'] = df.mean(axis=1)
         df2['mean'] = df2.mean(axis=1)
         
-        self.model_coef = list(df[df['mean'] != 0]['mean'])
+        self.model_coef = np.array(df[df['mean'] != 0]['mean'])
         self.model_features_num = list(df[df['mean']!= 0].index)
         self.model_features_name = list(df2[df2['mean']!= 0].index)
         
@@ -832,6 +833,7 @@ class DRFSC:
         Creates a bar plot of the features of the model and their contribution to the final prediction.
         
         Returns
+        Returns
         -------
         figure : matplotlib figure
             hisogram of feature coefficients for features of the final model.
@@ -839,40 +841,19 @@ class DRFSC:
         plt.figure()
         plt.title("Feature Importance")
         plt.xlabel("Feature Name")
-        plt.ylabel("Feature Coefficient")
-
-        if self.output == 'ensemble':
-            try:
-                cols = list(self.input_feature_names)
-                cols.insert(0, 'model_id')
-                coef = pd.DataFrame(0, columns=cols, index=range(0, self.n_hbins+1))
-                for id, key in enumerate(self.ensemble.keys()):
-                    coef.loc[id, 'model_id'] = key
-                    coef.loc[id, self.ensemble[key][1]] = self.ensemble[key][2].params
-                coef.loc['mean'] = coef.mean()
-                coef.loc['mean', 'model_id'] = 'mean'
-                coef_arr = coef.loc['mean'].to_numpy()
-                coef_arr = np.array(coef_arr[1:])
+        plt.ylabel("Feature Coefficient (abs value)")
         
-                coef_idx = coef_arr.nonzero()[0]
-            
-                disp = dict(zip(self.input_feature_names[coef_idx], coef_arr[coef_idx]))
-            except AttributeError:
-                raise AttributeError("Model has not been fit yet. Run .predict() or .predict_proba() first")  
-            
-        else: #self.output == 'single':
+        try:
             if self.input_feature_names is not None:
-                try:
-                    disp = dict(sorted(zip(self.features_, self.coef_), key = lambda x: x[1], reverse = True))
-                except AttributeError:
-                    raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
+                plot_feats = self.features_
             else:
                 print("No feature names provided. Plotting feature indices instead")
-                try:
-                    disp = dict(sorted(zip(self.features_num, self.coef_), key = lambda x: x[1], reverse = True))
-                except AttributeError:
-                    raise AttributeError("Model has not been fit yet. Run .predict() or predict_proba() first")  
-                
+                plot_feats = self.features_num
+            disp = dict(sorted(zip(plot_feats, abs(self.coef_)), key=lambda x: x[1], reverse=True))
+            
+        except AttributeError:
+            raise AttributeError("Model has not been fit yet. Run .fit() first")  
+
         return plt.bar(*zip(*disp.items()))
             
     def pos_neg_prediction(

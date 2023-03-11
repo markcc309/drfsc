@@ -241,9 +241,9 @@ class RFSC(RFSC_base):
                 self.perf_check = 0
                 
             if drfsc_index is None:
-                print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, avg perf is: {avg_performance[t]:.3f}, tol not reached, max diff is: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
+                print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, avg perf is: {avg_performance[t]:.5f}, tol not reached, max diff is: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
             else:
-                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, avg perf: {avg_performance[t]}, tol not reached, max diff: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
+                print(f"iter: {t} index: {drfsc_index}, avg model size: {avg_model_size[t]:.2f}, avg perf: {avg_performance[t]:.5f}, tol not reached, max diff: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
 
 
             if tol_check(mu_update, mu, self.tol): # stop if tolerance is reached.

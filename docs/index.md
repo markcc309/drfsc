@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-PyPI version: 0.0.5
+PyPI version: 0.0.6
 
 An open-source library for a distributed randomised feature selection and classification algorithm.
 
