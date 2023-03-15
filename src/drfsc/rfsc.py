@@ -210,6 +210,7 @@ class RFSC(RFSC_base):
 
         """
         # initialization
+        perf_break = False
         self.perf_check = 0
         self.rnd_feats = {}
         self.sig_feats = {}        
@@ -239,6 +240,7 @@ class RFSC(RFSC_base):
                 self.perf_check += 1
             else:
                 self.perf_check = 0
+                
                 
             if drfsc_index is None:
                 print(f"iter: {t}, avg model size: {avg_model_size[t]:.2f}, avg perf is: {avg_performance[t]:.5f}, tol not reached, max diff is: {np.abs(mu_update - mu).max():.5f}, perf check: {self.perf_check}.") if self.verbose else None
