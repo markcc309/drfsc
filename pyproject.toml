@@ -10,7 +10,7 @@ packages = [
 
 [project]
 name = "drfsc"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
   { name="Mark Chiu Chong", email="mark.chiuchong@gmail.com"},
 ]
