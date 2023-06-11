@@ -1,7 +1,7 @@
 # drfsc
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-version: 0.0.6
+[![DOI](https://zenodo.org/badge/579266140.svg)](https://zenodo.org/badge/latestdoi/579266140)
 
 An open-source library for a distributed randomised feature selection and classification algorithm.
 
